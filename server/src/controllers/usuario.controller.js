@@ -1,6 +1,11 @@
 import usuarios from "../models/usuario.model.js";
-import bcrypt from 'bcrypt'; 
+import bcrypt from 'bcrypt';
 
+const encriptar = (contrasena) => {
+  // Hashea la contraseña
+  const contraseñaHasheada = bcrypt.hash(contrasena, 10);
+  return contraseñaHasheada;
+}
 
 const agregarUsuario = async (req, res) => {
   try {
@@ -11,9 +16,8 @@ const agregarUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "La contraseña es requerida" });
     }
 
-    // Hashea la contraseña
-    const contraseñaHasheada = await bcrypt.hash(contrasena, 10);
-    const usuario = new usuarios({ ...datosUsuario, contrasena: contraseñaHasheada });
+    const encriptado = encriptar(contrasena);
+    const usuario = new usuarios({ ...datosUsuario, contrasena: encriptado });
 
     // Guarda el usuario en la base de datos
     const nuevoUsuario = await usuario.save();
@@ -64,8 +68,14 @@ const borrarPorId = async (req, res) => {
 
 const modificarUsuario = async (req, res) => {
   try {
-    const id = req.params.id;
-    const usuarioActualizado = await usuarios.findByIdAndUpdate(id, req.body, { new: true });
+    const { id } = req.params;
+
+    const { contrasena, ...datosUsuario } = req.body; // Extraigo la contraseña del objeto req.body
+
+    const encriptado = encriptar(contrasena);
+    req.body.contrasena = encriptado;
+
+    const usuarioActualizado = await usuarios.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
     if (usuarioActualizado) {
       res.json(usuarioActualizado);
     } else {
