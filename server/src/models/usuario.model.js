@@ -26,6 +26,12 @@ const usuario = new Schema({
             message: 'El email no es valido'
         }
     },
+    contrasena:{
+        type: String, 
+        required: [true, 'La contraseña es requerida'],
+        minlength: [8, 'La contraseña debe tener un minimo de 8 caracteres'],
+        maxlength: 100
+    },
     fechaDeNacimiento:{
         type: Date, 
         required: [true, 'La fecha de nacimiento es requerida'],
