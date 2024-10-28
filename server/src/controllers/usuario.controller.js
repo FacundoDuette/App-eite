@@ -1,9 +1,9 @@
 import usuarios from "../models/usuario.model.js";
 import bcrypt from 'bcrypt';
 
-const encriptar = (contrasena) => {
+const encriptar = async (contrasena) => {
   // Hashea la contraseña
-  const contraseñaHasheada = bcrypt.hash(contrasena, 10);
+  const contraseñaHasheada = await bcrypt.hash(contrasena, 10);
   return contraseñaHasheada;
 }
 
@@ -70,7 +70,7 @@ const modificarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { contrasena, ...datosUsuario } = req.body; // Extraigo la contraseña del objeto req.body
+    const { contrasena } = req.body; // Extraigo la contraseña del objeto req.body
 
     const encriptado = encriptar(contrasena);
     req.body.contrasena = encriptado;
