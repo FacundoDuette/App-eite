@@ -70,7 +70,7 @@ const modificarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { contrasena, ...datosUsuario } = req.body; // Extraigo la contraseña del objeto req.body
+    const { contrasena } = req.body; // Extraigo la contraseña del objeto req.body
 
     const encriptado = await encriptar(contrasena);
     req.body.contrasena = encriptado;
