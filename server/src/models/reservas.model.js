@@ -1,14 +1,48 @@
 import { model, Schema } from 'mongoose';
-import usuario from './usuario.model';
-import alojamiento from './alojamiento.model.js';
+// import usuario from './usuario.model';
+// import alojamiento from './alojamiento.model.js';
 
 const ReservasSchema = new Schema({
-    usuario: { type: Schema.Types.ObjectId, ref: 'Usuario' },
-    alojamiento: { type: Schema.Types.ObjectId, ref: 'Alojamiento' },
-    fechaInicio: { type: Date, required: true },
-    fechaFin: { type: Date, required: true },
-    cantidadHuespedes: { type: Number, required: true },
-    precio: { type: Number, required: true },
+    usuario: {
+        // type: Schema.type.ObjectId,       //En este campo se cargará el id único del usuario
+        // ref: usuario,
+        type: String,       //En este campo se cargará el correo único del usuario
+        required: [true, 'El correo del usuario es requerido']
+    },
+    alojamiento: {
+        // type: Schema.type.ObjectId,       //En este campo se cargará el id único del alojamiento
+        // ref: alojamiento,
+        type: String,    //En este campo se cargará el id único del alojamiento
+        required: [true, 'El id del alojamiento es requerido']
+    },
+    fechaInicio: {
+        type: Date,
+        required: [true, 'La fecha de inicio es requerida'],
+        validate: {
+            validator: function (value) {
+                return value >= new Date();
+            },
+            message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
+        }
+    },
+    fechaFin: {
+        type: Date,
+        required: [true, 'La fecha de fin es requerida'],
+        validate: {
+            validator: function (value) {
+                return value >= new Date();
+            },
+            message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
+        }
+    },
+    cantidadHuespedes: {
+        type: Number,
+        required: [true, 'La cantidad de huespedes es requerida']
+    },
+    precio: {
+        type: Number,
+        required: [true, 'El precio es requerido']
+    },
 })
 
 const Reserva = model('Reserva', ReservasSchema);
