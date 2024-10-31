@@ -4,13 +4,13 @@ import alojamiento from './alojamiento.model.js';
 
 const ReservasSchema = new Schema({
     usuario: {
-        type: Schema.type.ObjectId,       //En este campo se cargará el id único del usuario
+        type: Schema.Types.ObjectId,       //En este campo se cargará el id único del usuario
         ref: usuario,
         // type: String,       //En este campo se cargará el correo único del usuario
         required: [true, 'El correo del usuario es requerido']
     },
     alojamiento: {
-        type: Schema.type.ObjectId,       //En este campo se cargará el id único del alojamiento
+        type: Schema.Types.ObjectId,       //En este campo se cargará el id único del alojamiento
         ref: alojamiento,
         // type: String,    //En este campo se cargará el id único del alojamiento
         required: [true, 'El id del alojamiento es requerido']
