@@ -5,9 +5,9 @@ import alojamientos from '../models/alojamiento.model.js';
 const createReserva = async (req, res) => {
     console.log('Creando una reserva')
     try {
-        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio } = req.body;
+        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body;
 
-        //Evaluación si el usuario existe
+        //Verificación si el usuario existe
         if (usuario == "" || usuario == undefined || usuario == null) {
             return res.status(400).json({ message: 'El usuario es requerido' });
         }
@@ -16,7 +16,7 @@ const createReserva = async (req, res) => {
             return res.status(400).json({ message: 'El usuario no existe' });
         }
 
-        //Evaluación si el alojamiento existe
+        //Verificación si el alojamiento existe
         if (alojamiento == "" || alojamiento == undefined || alojamiento == null) {
             return res.status(400).json({ message: 'El alojamiento es requerido' });
         }
@@ -25,8 +25,18 @@ const createReserva = async (req, res) => {
             return res.status(400).json({ message: 'El alojamiento no existe' });
         }
 
+        //Verificación de cantidadHuespedes disponibles
+        if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
+            return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
+        }
+
+        precio = hostId.precio; // Definimos el valor de la reserva igual al valor del costo del alojamiento, esto sirve de retgistro en caso el costo del alojamiento se modifique a futuro.
+
+        //Verificación de fechas disponibles
+        //pendiente
+
         //Se crea la Reserva con los datos de user y alojamientos ya verificados
-        const reserva = await reservas.create({ userId, hostId, fechaInicio, fechaFin, cantidadHuespedes, precio });
+        const reserva = await reservas.create({ usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas });
         const nuevaReserva = await reserva.save();
         if (!nuevaReserva) {
             return res.status(500).json({ error })
@@ -47,7 +57,7 @@ const getAllReservas = async (req, res) => {
         if (listaReservas.length === 0) {
             return res.status(404).json({ message: 'No hay reservas' })
         }
-        res.status(200).json({ message: 'Reservas obtenidas', listaReservas })
+        res.status(200).json({ listaReservas })
         return;
     } catch (error) {
         console.error(error);
@@ -64,7 +74,7 @@ const getReservaById = async (req, res) => {
         if (!reserva) {
             return res.status(404).json({ message: 'No se encontró la reserva' })
         }
-        res.status(200).json({ message: 'Reserva obtenida', reserva })
+        res.status(200).json({ reserva })
         return;
     } catch (error) {
         console.error(error);
@@ -77,11 +87,11 @@ const getReservaByusuario = async (req, res) => {
     console.log('obtenerReservaPorusuario')
     try {
         const { id } = req.params;
-        const reserva = await reservas.find({ user: id });
-        if (!reserva) {
-            return res.status(404).json({ message: 'No se encontró la reserva' })
+        const listaReservas = await reservas.find({ usuario: id });
+        if (listaReservas.length === 0) {
+            return res.status(404).json({ message: 'No se encontró nungina reserva para este usuario' })
         }
-        res.status(200).json({ message: 'Reserva obtenida', reserva })
+        res.status(200).json({ listaReservas })
         return;
     } catch (error) {
         console.error(error);
@@ -94,11 +104,11 @@ const getReservaByalojamiento = async (req, res) => {
     console.log('obtenerReservaPoralojamiento')
     try {
         const { id } = req.params;
-        const reserva = await reservas.find({ alojamiento: id });
-        if (!reserva) {
-            return res.status(404).json({ message: 'No se encontró la reserva' })
+        const listaReservas = await reservas.find({ alojamiento: id });
+        if (listaReservas.length === 0) {
+            return res.status(404).json({ message: 'No se encontró ninguna reserva para este alojamiento' })
         }
-        res.status(200).json({ message: 'Reserva obtenida', reserva })
+        res.status(200).json({ listaReservas })
         return;
     } catch (error) {
         console.error(error);
@@ -111,18 +121,37 @@ const updateReserva = async (req, res) => {
     console.log('updateReserva')
     try {
         const { id } = req.params;
-        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio } = req.body;
-        if (usuariosController.obtenerPorId(usuario).status != 200) {                            //verificación si existe el usuario
-            return res.status(400).json({ message: 'El usuario no existe' })
+        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body;
+
+        //Verificación si el usuario existe
+        if (usuario == "" || usuario == undefined || usuario == null) {
+            return res.status(400).json({ message: 'El usuario es requerido' });
         }
-        // if(!alojamientosController.alojamientoPorID(alojamiento).status != 200){      //verificación si existe el Alojamiento
-        //     return res.status(400).json({message: 'El alojamiento no existe'})
-        // }
-        const reserva = await reservas.findByIdAndUpdate(id, { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio }, { new: true, runValidators: true });
+        const userId = await usuarios.findById(usuario);
+        if (!userId) {
+            return res.status(400).json({ message: 'El usuario no existe' });
+        }
+
+        //Verificación si el alojamiento existe
+        if (alojamiento == "" || alojamiento == undefined || alojamiento == null) {
+            return res.status(400).json({ message: 'El alojamiento es requerido' });
+        }
+        const hostId = await alojamientos.findById(alojamiento);
+        if (!hostId) {
+            return res.status(400).json({ message: 'El alojamiento no existe' });
+        }
+
+        //Verificación de cantidadHuespedes disponibles
+        if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
+            return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
+        }
+
+        //Se procede a intentar la actualización
+        const reserva = await reservas.findByIdAndUpdate(id, { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas }, { new: true, runValidators: true });
         if (!reserva) {
             return res.status(404).json({ message: 'No se encontró la reserva' })
         }
-        res.status(200).json({ message: 'Reserva actualizada', reserva })
+        res.status(200).json({ reserva })
         return;
     } catch (error) {
         console.error(error);
@@ -139,7 +168,7 @@ const deleteReserva = async (req, res) => {
         if (!reserva) {
             return res.status(404).json({ message: 'No se encontró la reserva' })
         }
-        res.status(200).json({ message: 'Reserva eliminada', reserva })
+        res.status(200).json({ reserva })
         return;
     } catch (error) {
         console.error(error);
