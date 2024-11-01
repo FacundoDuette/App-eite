@@ -11,16 +11,18 @@ const RegisterPage = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log(nombre, apellido,email , contrasena)
+        console.log(nombre, apellido, email, contrasena)
         // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
-        const respuesta = await axios.post('/api/usuario',{data:{
-            datosUsuario : {
-                nombre,
-                apellido,
-                email,
-            },
-            contrasena
-        }});
+        const respuesta = await axios.post('/api/usuario', {
+            data: {
+                datosUsuario: {
+                    nombre,
+                    apellido,
+                    email,
+                },
+                contrasena
+            }
+        });
         console.log(respuesta.data);
     }
 
@@ -56,10 +58,10 @@ const RegisterPage = () => {
                         onChange={e => setContrasena(e.target.value)}
                     />
                     <button type="Submit" className="primary" >Register</button>
+                    <div className="text-center text-gray-500 py-2">
+                        Ya eres miembro? <Link className="underline text-black" to={'/login'}>Iniciar sesión</Link>
+                    </div>
                 </form>
-                <div className="text-center text-gray-500 py-2">
-                    Ya eres miembro? <Link className="underline text-black" to={'/login'}>Iniciar sesión</Link>
-                </div>
             </div>
         </div>
     )
