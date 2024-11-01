@@ -1,18 +1,31 @@
 import { model, Schema } from 'mongoose';
+/**
+ * Script de prueba
+ {
+  "usuarioId": "671d805cebe38adf2f25b0fb",
+  "tipoEspacio": "Apartamento 2 ",
+  "tipoAlojamiento": "Entero",
+  "detalles": {
+    "cantidadHabitaciones": 2,
+    "cantidadCamas": 3,
+    "cantidadPersonas": 4
+  },
+  "direccion": "123 Calle Principal, Ciudad, País",
+  "fotos": [
+    "https://ejemplo.com/foto1.jpg",
+    "https://ejemplo.com/foto2.jpg"
+  ],
+  "precio": 120
+}
+ */
+
 
 const alojamiento = new Schema({
-    email: {
-        type: String,
-        required: [true, 'El email es requerido'],
-        unique: true,
-        validate: {
-            validator: function (value) {
-                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return regex.test(value);
-            },
-            message: 'El email no es valido'
-        }
-    },
+    usuarioId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Usuarios',  // Nombre del modelo de referencia
+        required: [true, 'El usuario es requerido'],
+      },
     tipoEspacio: {
         type: String,
         required: [true, 'El tipo es requerido'],

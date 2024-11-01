@@ -4,6 +4,8 @@ import cors from 'cors';
 
 import conectarDB from './config/mongoose.config.js';
 import rutasUsuario from './src/routes/usuario.routes.js';
+import rutasReserva from './src/routes/reserva.routes.js';
+import rutasAlojamiento from './src/routes/alojamiento.routes.js';
 
 dotenv.config();
 
@@ -14,6 +16,8 @@ app.use(cors());
 const PORT = process.env.PORT || 8080;
 
 app.use('/api/usuario', rutasUsuario);
+app.use('/api/reserva', rutasReserva);
+app.use('/api/alojamiento', rutasAlojamiento)
 app.use('*', (req, res) => {
     res.status(404).json({ message: 'No se encuentra la ruta solicitada' });
 })
