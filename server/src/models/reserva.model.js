@@ -1,18 +1,18 @@
 import { model, Schema } from 'mongoose';
-// import usuario from './usuario.model';
-// import alojamiento from './alojamiento.model.js';
+import usuario from './usuario.model.js';
+import alojamiento from './alojamiento.model.js';
 
 const ReservasSchema = new Schema({
     usuario: {
-        // type: Schema.type.ObjectId,       //En este campo se cargará el id único del usuario
-        // ref: usuario,
-        type: String,       //En este campo se cargará el correo único del usuario
+        type: Schema.Types.ObjectId,       //En este campo se cargará el id único del usuario
+        ref: usuario,
+        // type: String,       //En este campo se cargará el correo único del usuario
         required: [true, 'El correo del usuario es requerido']
     },
     alojamiento: {
-        // type: Schema.type.ObjectId,       //En este campo se cargará el id único del alojamiento
-        // ref: alojamiento,
-        type: String,    //En este campo se cargará el id único del alojamiento
+        type: Schema.Types.ObjectId,       //En este campo se cargará el id único del alojamiento
+        ref: alojamiento,
+        // type: String,    //En este campo se cargará el id único del alojamiento
         required: [true, 'El id del alojamiento es requerido']
     },
     fechaInicio: {
@@ -43,7 +43,17 @@ const ReservasSchema = new Schema({
         type: Number,
         required: [true, 'El precio es requerido']
     },
-})
+    descripcion: {
+        type: String,
+        // required: [true, 'La descripción es requerida'],
+        default: 'No hay descripción'
+    },
+    notas: {
+        type: String,
+        // required: [true, 'Las notas son requeridas'],
+        default: 'No hay notas'
+    },
+}, { timestamps: true });
 
 const Reserva = model('Reserva', ReservasSchema);
 
