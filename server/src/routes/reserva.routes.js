@@ -19,9 +19,9 @@ router.get('/user/:id', reservaController.getReservaByusuario);
 router.get('/host/:id', reservaController.getReservaByalojamiento);
 
 //Modificar reserva
-router.patch('/:id')
+router.patch('/:id', reservaController.updateReserva)
 
 //Eliminar reserva
-router.delete('/:id')
+router.delete('/:id', reservaController.deleteReserva)
 
 export default router;

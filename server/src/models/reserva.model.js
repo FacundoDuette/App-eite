@@ -43,7 +43,17 @@ const ReservasSchema = new Schema({
         type: Number,
         required: [true, 'El precio es requerido']
     },
-})
+    descripcion: {
+        type: String,
+        // required: [true, 'La descripción es requerida'],
+        default: 'No hay descripción'
+    },
+    notas: {
+        type: String,
+        // required: [true, 'Las notas son requeridas'],
+        default: 'No hay notas'
+    },
+}, { timestamps: true });
 
 const Reserva = model('Reserva', ReservasSchema);
 
