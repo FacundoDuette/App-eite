@@ -13,10 +13,10 @@ router.get('/', reservaController.getAllReservas);
 router.get('/:id', reservaController.getReservaById);
 
 //Obtener reservas por id de usuario
-router.get('/user/:id', reservaController.getReservaByUserId);
+router.get('/user/:id', reservaController.getReservaByusuario);
 
 //Obtener reservas por id de alojamiento
-router.get('/host/:id', reservaController.getReservaByAlojamientoId);
+router.get('/host/:id', reservaController.getReservaByalojamiento);
 
 //Modificar reserva
 router.patch('/:id')
