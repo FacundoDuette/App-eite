@@ -9,14 +9,16 @@ const encriptar = async (contrasena) => {
 
 const agregarUsuario = async (req, res) => {
   try {
-    const { contrasena, ...datosUsuario } = req.body;
+    //cambiamos la forma de acceder a los datos, sacamos los ... de datosUsuario y  le agregamos .data al final de req.body
+    const { contrasena, datosUsuario } = req.body.data;
 
     // Verifica que haya una contraseña
     if (!contrasena) {
       return res.status(400).json({ mensaje: "La contraseña es requerida" });
     }
 
-    const encriptado = encriptar(contrasena);
+    //faltaba "await" para esperar a que se encripte la contrasena
+    const encriptado = await encriptar(contrasena);
     const usuario = new usuarios({ ...datosUsuario, contrasena: encriptado });
 
     // Guarda el usuario en la base de datos

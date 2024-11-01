@@ -34,7 +34,7 @@ const usuario = new Schema({
     },
     fechaDeNacimiento: {
         type: Date,
-        required: [true, 'La fecha de nacimiento es requerida'],
+        required: [false, 'La fecha de nacimiento es requerida'],
         validate: {
             validator: function (value) {
                 return value <= new Date();
@@ -44,7 +44,7 @@ const usuario = new Schema({
     },
     foto: {
         type: String,
-        required: [true, 'La foto es requerida'],
+        required: [false, 'La foto es requerida'],
         validate: {
             validator: function (value) {
                 const regex = /(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/;
@@ -55,7 +55,7 @@ const usuario = new Schema({
     },
     contacto: {
         type: String,
-        required: [true, 'El contacto es requerido'],
+        required: [false, 'El contacto es requerido'],
         validate: {
             validator: function (value) {
                 const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4}$/;

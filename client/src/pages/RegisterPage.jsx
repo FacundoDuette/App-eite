@@ -11,12 +11,16 @@ const RegisterPage = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        const respuesta = await axios.post('/api/usuario', {
-            nombre,
-            apellido,
-            email,
+        console.log(nombre, apellido,email , contrasena)
+        // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
+        const respuesta = await axios.post('/api/usuario',{data:{
+            datosUsuario : {
+                nombre,
+                apellido,
+                email,
+            },
             contrasena
-        });
+        }});
         console.log(respuesta.data);
     }
 
