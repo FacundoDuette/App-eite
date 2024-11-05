@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
 
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         console.log(email, contrasena)
+        navigate('/index')
     }
 
     return (
