@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const RegisterPage = () => {
@@ -8,6 +8,8 @@ const RegisterPage = () => {
     const [apellido, setApellido] = useState('');
     const [email, setEmail] = useState('');
     const [contrasena, setContrasena] = useState('');
+
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -24,6 +26,7 @@ const RegisterPage = () => {
             }
         });
         console.log(respuesta.data);
+        navigate('/login');
     }
 
 
