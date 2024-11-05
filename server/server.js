@@ -6,6 +6,7 @@ import conectarDB from './config/mongoose.config.js';
 import rutasUsuario from './src/routes/usuario.routes.js';
 import rutasReserva from './src/routes/reserva.routes.js';
 import rutasAlojamiento from './src/routes/alojamiento.routes.js';
+import rutasSesion from './src/routes/session.routes.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors(
 
 const PORT = process.env.PORT || 8080;
 
+app.use('/api/session', rutasSesion);
 app.use('/api/usuario', rutasUsuario);
 app.use('/api/reserva', rutasReserva);
 app.use('/api/alojamiento', rutasAlojamiento)
