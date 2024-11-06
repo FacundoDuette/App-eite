@@ -1,6 +1,24 @@
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
 export default function Header() {
+    const [conectado, setConectado] = useState(false)
+
+    const consultarUser = async () => {
+        try {
+            const response = await axios.get('/api/session/session')
+            const data = response.data
+            console.log(data);
+            setConectado(true);
+        } catch (error) {
+            console.log(error)
+            setConectado(false);
+        }
+    }
+
+    consultarUser();
+
     return (
         <>
             <header className=' flex justify-between'>

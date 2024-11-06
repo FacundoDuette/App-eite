@@ -1,6 +1,8 @@
 import usuario from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+// import dotenv from "dotenv";
+// dotenv.config();
 
 const login = async (req, res) => {
     const { email, contrasena } = req.body;
@@ -17,7 +19,7 @@ const login = async (req, res) => {
             });
         }
 
-        const contrasenaValida = await bcrypt.compare(contrasena, user.senha);      //Se compara la contraseña ingresada con la contraseña guardada del usuario
+        const contrasenaValida = await bcrypt.compare(contrasena, user.contrasena);      //Se compara la contraseña ingresada con la contraseña guardada del usuario
 
         if (!contrasenaValida) {        //si devielve true (válido) se omite el if, si devuelve false (inválido) se ejecuta el if y devuelve un mensaje hacia el front.
             return res.status(401).json({
