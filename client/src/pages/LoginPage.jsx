@@ -19,7 +19,7 @@ const LoginPage = () => {
             console.log(data);
             const setter = setUser(data)
             await Promise.resolve(setter).then(() => {
-                navigate('/')
+                navigate('/index')
             });
         } catch (error) {
             console.error(error);
