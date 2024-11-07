@@ -12,6 +12,12 @@ const agregarUsuario = async (req, res) => {
     //cambiamos la forma de acceder a los datos, sacamos los ... de datosUsuario y  le agregamos .data al final de req.body
     const { contrasena, datosUsuario } = req.body.data;
 
+    //Verificamos si hay o no un usuario con el mismo email
+    const usuarioExistente = await usuarios.findOne({ email: datosUsuario.email });
+    if (usuarioExistente) {
+      return res.status(400).json({ mensaje: "El email ya está en uso" });
+    }
+
     // Verifica que haya una contraseña
     if (!contrasena) {
       return res.status(400).json({ mensaje: "La contraseña es requerida" });
