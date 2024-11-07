@@ -14,8 +14,8 @@ const userContextProvider = ({ children }) => {
                 const userData = await axios.get(`/api/usuario/${data.id}`)
                 // console.log(userData.data)
                 setUser(userData.data)
-                setCargado(true)
             })
+            setCargado(true)
         }
     }, [])
 
