@@ -25,7 +25,7 @@ const alojamiento = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Usuarios',  // Nombre del modelo de referencia
         required: [true, 'El usuario es requerido'],
-      },
+    },
     tipoEspacio: {
         type: String,
         required: [true, 'El tipo es requerido'],
@@ -66,11 +66,17 @@ const alojamiento = new Schema({
         required: [true, 'Las fotos son requeridas'],
         minlength: 1
     },
-    precio: {
-        type: Number,
-        required: [true, 'El precio es requerido'],
-        min: 0
-    },
+    descripcion: {
+        type: String,
+        // required: [true, 'La descripción es requerida'],
+        minlength: [10, 'La descripción debe tener un minimo de 10 caracteres'],
+        maxlength: [255, 'la descripción debe tener un maximo de 255 caracteres']
+    }
+    // precio: {
+    //     type: Number,
+    //     required: [true, 'El precio es requerido'],
+    //     min: 0
+    // },
 }, { timestamps: true });
 
 const alojamientos = model('Alojamientos', alojamiento);
