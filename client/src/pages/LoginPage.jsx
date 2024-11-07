@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import userContext from "../components/userContext";
 
 
 const LoginPage = () => {
@@ -8,14 +9,18 @@ const LoginPage = () => {
     const [contrasena, setContrasena] = useState('');
     const navigate = useNavigate();
 
+    const { setUser } = useContext(userContext.userContext)
+
     const handleLogin = async (e) => {
         e.preventDefault();
-        // console.log(email, contrasena)
         try {
             const response = await axios.post('/api/session/login', { email, contrasena });
-            const data = response.data;
+            const data = response.data.user;
             console.log(data);
-            navigate('/index')
+            const setter = setUser(data)
+            await Promise.resolve(setter).then(() => {
+                navigate('/index')
+            });
         } catch (error) {
             console.error(error);
         }

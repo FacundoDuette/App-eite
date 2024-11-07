@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import conectarDB from './config/mongoose.config.js';
 import rutasUsuario from './src/routes/usuario.routes.js';
@@ -12,6 +13,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors(
     {
         origin: ['http://localhost:5173', 'http://127.0.0.1:5173']
