@@ -25,9 +25,9 @@ function App() {
           <Route path='/login' Component={LoginPage} />
           <Route path='/register' Component={RegisterPage} />
           <Route path='/account/:subpage?' Component={AccountPage} />
+          <Route path='/account/:subpage/:action' Component={AccountPage} />
           {/* <Route path='/logout' element={<h1 onClick={() => { navegar(-1) }}>logout</h1>} /> */}
           <Route path='/*' element={<h1 onClick={() => { navegar(-1) }}>404</h1>} />
-          <Route path='/places' Component={PlacesPage} />
         </Route>
       </Routes>
     </UserContextProvider>
