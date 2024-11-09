@@ -1,9 +1,14 @@
 import { Link, useParams } from "react-router-dom";
-
+import { useState } from "react";
 
 const PlacesPage = () => {
     const { action } = useParams();
-
+    
+    const [titulo, setTitulo] = useState('');
+    const [direccion, setDireccion] = useState('');
+    const [enlaceImagen, setEnlaceImagen] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    
     return (
         <div>
             {action !== 'new' && (
@@ -22,14 +27,29 @@ const PlacesPage = () => {
                     <form>
                         <h2 className="text-2xl mt-4">Título</h2>
                         <p className="text-gray-500 text-sm">El título del alojamiento debe ser corto y preciso.</p>
-                        <input type="text" placeholder="título" />
+                        <input 
+                            type="text" 
+                            placeholder="título" 
+                            value={titulo}
+                            onChange={e => setTitulo(e.target.value)}
+                        />
                         <h2 className="text-xl mt-4">Dirección</h2>
                         <p className="text-gray-500 text-sm">Dirección del alojamiento.</p>
-                        <input type="text" placeholder="direccion " />
+                        <input 
+                            type="text" 
+                            placeholder="direccion "
+                            value={direccion} 
+                            onChange={e => setDireccion(e.target.value)}
+                        />
                         <h2 className="text-xl mt-4">Fotos</h2>
                         <p className="text-gray-500 text-sm">Fotos del alojamiento</p>
                         <div className="flex gap-2">
-                            <input type="text" placeholder="agregar usando un link ...jpg" />
+                            <input 
+                                type="text" 
+                                placeholder="agregar usando un link ...jpg" 
+                                value={enlaceImagen}
+                                onChange={e => setEnlaceImagen(e.target.value)}
+                            />
                             <button className="bg-gray-200 px-4 rounded-2xl">
                                 Agregar foto
                             </button>
@@ -44,7 +64,10 @@ const PlacesPage = () => {
                         </div>
                         <h2 className="text-xl mt-4">Descripción</h2>
                         <p className="text-gray-500 text-sm">Descripción del alojamiento</p>
-                        <textarea />
+                        <textarea 
+                            value={descripcion}
+                            onChange={e => setDescripcion(e.target.value)}
+                        ></textarea>
                         <h2 className="text-xl mt-4">Servicios</h2>
                         <p className="text-gray-500 text-sm">Servicios del alojamiento</p>
                         <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
@@ -107,6 +130,10 @@ const PlacesPage = () => {
                             </div>
                             <div>
                                 <h3 className="mt-2 -mb-1">Cantidad de huéspedes</h3>
+                                <input type="text" />
+                            </div>
+                            <div>
+                                <h3 className="mt-2 -mb-1">Precio</h3>
                                 <input type="text" />
                             </div>
                         </div>
