@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PlacesFormPage from "./PlacesFormPage";
 
 
 const PlacesPage = () => {
-   
-    
+
+    const { action } = useParams();
+
     return (
         <div>
             {action !== 'new' && (
@@ -19,7 +20,7 @@ const PlacesPage = () => {
                 </div>
             )}
             {action === 'new' && (
-                <PlacesFormPage/>
+                <PlacesFormPage />
             )}
         </div>
     )
