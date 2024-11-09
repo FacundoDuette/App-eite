@@ -42,28 +42,6 @@ const alojamientoSchema = new Schema({
         maxlength: 500,
         default: ''
     },
-    horarios: {
-        checkIn: {
-            type: String,
-            validate: {
-                validator: function(v) {
-                    return /^\d{2}:\d{2}$/.test(v);
-                },
-                message: props => `${props.value} no es un formato de hora válido`
-            },
-            default: "14:00"
-        },
-        checkOut: {
-            type: String,
-            validate: {
-                validator: function(v) {
-                    return /^\d{2}:\d{2}$/.test(v);
-                },
-                message: props => `${props.value} no es un formato de hora válido`
-            },
-            default: "11:00"
-        }
-    },
     cantidadHuespedes: {
         type: Number,
         required: [true, 'La cantidad de huéspedes es requerida'],
@@ -75,23 +53,6 @@ const alojamientoSchema = new Schema({
         required: [true, 'El precio por noche es requerido'],
         min: 0
     },
-    detalles: {
-        cantidadHabitaciones: {
-            type: Number,
-            required: [true, 'La cantidad de habitaciones es requerida'],
-            min: 1
-        },
-        cantidadCamas: {
-            type: Number,
-            required: [true, 'La cantidad de camas es requerida'],
-            min: 1
-        },
-        capacidadMaxima: {
-            type: Number,
-            required: [true, 'La capacidad de personas es requerida'],
-            min: 1
-        }
-    }
 }, { timestamps: true });
 
 const Alojamientos = model('Alojamientos', alojamientoSchema);
