@@ -33,6 +33,18 @@ const createReserva = async (req, res) => {
         precio = hostId.precio; // Definimos el valor de la reserva igual al valor del costo del alojamiento, esto sirve de retgistro en caso el costo del alojamiento se modifique a futuro.
 
         //Verificación de fechas disponibles
+        const verifAloj = await reservas.find({ alojamiento: alojamiento });
+        if (verifAloj.length > 0) {
+            for (let i = 0; i < verifAloj.length; i++) {
+                if (fechaInicio <= verifAloj[i].fechaFin) {
+                    return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de inicio seleccionada' });
+                }
+                if (fechaFin >= verifAloj[i].fechaInicio){
+                    return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de fin seleccionada' });
+                }
+            }
+        }
+
         //pendiente
 
         //Se crea la Reserva con los datos de user y alojamientos ya verificados
