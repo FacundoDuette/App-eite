@@ -1,30 +1,9 @@
-import { Link, useParams } from "react-router-dom";
-import PlacesFormPage from "./PlacesFormPage";
-import { useState } from "react";
 
-const PlacesPage = () => {
-    const { action } = useParams();
-    
-    const [titulo, setTitulo] = useState('');
-    const [direccion, setDireccion] = useState('');
-    const [enlaceImagen, setEnlaceImagen] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    
-    return (
+
+const PlacesFormPage = () => {
+
+    return(
         <div>
-            {action !== 'new' && (
-                <div className="text-center">
-                    <Link className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
-                        to={'/account/places/new'}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Agregar nuevo alojamiento
-                    </Link>
-                </div>
-            )}
-            {action === 'new' && (
-                <div>
                     <form>
                         <h2 className="text-2xl mt-4">Título</h2>
                         <p className="text-gray-500 text-sm">El título del alojamiento debe ser corto y preciso.</p>
@@ -119,9 +98,7 @@ const PlacesPage = () => {
                         <button className="primary my-4"> Agregar Alojamiento</button>
                     </form>
                 </div>
-            )}
-        </div>
     )
 }
 
-export default PlacesPage;
+export default PlacesFormPage
