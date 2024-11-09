@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import userContext from "../components/userContext"
 
+
 const Reservations = () => {
     const {user, cargado} = useContext(userContext.userContext)
     const [reservas, setReservas] = useState([])
@@ -28,7 +29,14 @@ const Reservations = () => {
     return(
         <>
             <form>
-                
+                <div>
+                    <label>Fecha Inicio</label>
+                    <input type="date" value={reservas.fechaInicio} onChange={(e) => reservas.fechaInicio = e.target.value}/>
+                </div>
+                <div>
+                    <label>Fecha Fin</label>
+                <input type="date"/>
+                </div>
                 <button onClick={handleSubmit}>Enviar datos</button>
             </form>
         </>
