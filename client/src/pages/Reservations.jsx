@@ -10,8 +10,11 @@ const Reservations = () => {
         //Crear validaciones...
 
         reservas.usuario = user.id
+        const idAloj= '6722e67be43a492c826f73b8'
+        reservas.alojamiento = idAloj
         
-        console.log(user.id)
+        console.log('User_id:',user.id)
+        console.log('Aloj_id:',idAloj)
 
         try {
             const response = await axios.post('/api/reservas', reservas)
@@ -25,7 +28,7 @@ const Reservations = () => {
     return(
         <>
             <form>
-
+                
                 <button onClick={handleSubmit}>Enviar datos</button>
             </form>
         </>
