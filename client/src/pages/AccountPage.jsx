@@ -3,7 +3,7 @@ import userContext from "../components/userContext";
 import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import PlacesPage from "./PlacesPage";
-import Reservations from 
+import Reservations from "./Reservations"
 
 const AccountPage = () => {
     const { user, setUser, cargado } = useContext(userContext.userContext);
@@ -84,7 +84,7 @@ const AccountPage = () => {
                 <Reservations />
             )}
             {subpage === 'bookings/new' && (
-                <PlacesPage />
+                <Reservations />
             )}
         </div>
     )

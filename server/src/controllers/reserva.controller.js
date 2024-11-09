@@ -5,7 +5,7 @@ import alojamientos from '../models/alojamiento.model.js';
 const createReserva = async (req, res) => {
     console.log('Creando una reserva')
     try {
-        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body;
+        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas } = req.body;
 
         //Verificación si el usuario existe
         if (usuario == "" || usuario == undefined || usuario == null) {
@@ -57,7 +57,7 @@ const createReserva = async (req, res) => {
         return;
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error })
+        res.status(500).json({ error.message , 'texto' : 'prueba de kk' })
         return;
     }
 }

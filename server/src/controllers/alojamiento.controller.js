@@ -56,7 +56,7 @@ const modificarAlojamiento = async (req, res) => {
 
 const agregarAlojamiento = async (req, res) => {
     try {
-        const nuevoAlojamiento = req.body;
+        const nuevoAlojamiento = req.body.data;
         const alojamiento = new alojamientos(nuevoAlojamiento);
         await alojamiento.save();
         res.status(201).json(alojamiento);

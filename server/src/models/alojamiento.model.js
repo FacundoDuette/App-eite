@@ -20,8 +20,8 @@ const alojamientoSchema = new Schema({
     },
     fotos: [{
         type: String,
-        required: [true, 'Al menos una foto es requerida'],
-        validate: [v => Array.isArray(v) && v.length > 0, 'Debe incluir al menos una foto']
+        //required: [true, 'Al menos una foto es requerida'],
+        //validate: [v => Array.isArray(v) && v.length > 0, 'Debe incluir al menos una foto']
     }],
     descripcion: {
         type: String,
@@ -51,7 +51,7 @@ const alojamientoSchema = new Schema({
     precioPorNoche: {
         type: Number,
         required: [true, 'El precio por noche es requerido'],
-        min: 0
+        
     },
 }, { timestamps: true });
 

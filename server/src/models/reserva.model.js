@@ -7,7 +7,7 @@ const ReservasSchema = new Schema({
         type: Schema.Types.ObjectId,       //En este campo se cargará el id único del usuario
         ref: usuario,
         // type: String,       //En este campo se cargará el correo único del usuario
-        required: [true, 'El correo del usuario es requerido']
+        required: [true, 'El Usuario es requerido']
     },
     alojamiento: {
         type: Schema.Types.ObjectId,       //En este campo se cargará el id único del alojamiento
@@ -38,15 +38,6 @@ const ReservasSchema = new Schema({
     cantidadHuespedes: {
         type: Number,
         required: [true, 'La cantidad de huespedes es requerida']
-    },
-    precio: {
-        type: Number,
-        required: [true, 'El precio es requerido']
-    },
-    descripcion: {
-        type: String,
-        // required: [true, 'La descripción es requerida'],
-        default: 'No hay descripción'
     },
     notas: {
         type: String,

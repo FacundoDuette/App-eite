@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
-// import PlacesFormPage from "./PlacesFormPage";
+import userContext from "../components/userContext";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 
 const PlacesFormPage = () => {
+    const { user, setUser, cargado } = useContext(userContext.userContext);
+    const idUser = user._id;
     const { action } = useParams();
 
     const navigate = useNavigate();
@@ -87,18 +89,21 @@ const PlacesFormPage = () => {
         e.preventDefault();
         console.log(titulo, direccion, enlaceImagen, descripcion, servicios, informacionExtra, cantidadHuespedes, precioPorNoche);
         // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
-        const respuesta = await axios.post('/api/usuario', {
+        const respuesta = await axios.post('/api/alojamiento', {
             data: {
-                datosUsuario: {
-                    nombre,
-                    apellido,
-                    email,
-                },
-                contrasena
+                idUser,
+                titulo,
+                direccion,
+                enlaceImagen,
+                descripcion,
+                servicios,
+                informacionExtra,
+                cantidadHuespedes,
+                precioPorNoche
             }
         });
         console.log(respuesta.data);
-        navigate('/login');
+       // navigate('/account/');
     }
 
     return (
@@ -116,7 +121,7 @@ const PlacesFormPage = () => {
             )}
             {action === 'new' && (
                 <div>
-                    <form>
+                    <form onSubmit={handleRegisterAlojamiento}>
                         <h2 className="text-2xl mt-4">Título</h2>
                         <p className="text-gray-500 text-sm">El título del alojamiento debe ser corto y preciso.</p>
                         <input 
@@ -202,7 +207,7 @@ const PlacesFormPage = () => {
                                 />
                             </div>
                         </div>
-                        <button className="primary my-4"> Agregar Alojamiento</button>
+                        <button className="primary my-4" > Agregar Alojamiento</button>
                     </form>
                 </div>
             )}
