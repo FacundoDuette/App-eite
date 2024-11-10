@@ -1,58 +1,48 @@
-import { Link, useNavigate } from "react-router-dom"
+import {Link, Navigate} from "react-router-dom";
+import {useContext, useState} from "react";
 import axios from "axios";
-import { useContext, useState } from "react";
-import userContext from "../components/userContext";
+import {UserContext} from "../UserContext.jsx";
 
-
-const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [contrasena, setContrasena] = useState('');
-    const navigate = useNavigate();
-
-    const { setUser } = useContext(userContext.userContext)
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post('/api/session/login', { email, contrasena });
-            const data = response.data.user;
-            console.log(data);
-            const setter = setUser(data)
-            await Promise.resolve(setter).then(() => {
-                navigate('/')
-            });
-        } catch (error) {
-            console.error(error);
-        }
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [redirect, setRedirect] = useState(false);
+  const {setUser} = useContext(UserContext);
+  async function handleLoginSubmit(ev) {
+    ev.preventDefault();
+    try {
+      const {data} = await axios.post('/login', {email,password});
+      setUser(data);
+      alert('Login successful');
+      setRedirect(true);
+    } catch (e) {
+      alert('Login failed');
     }
+  }
 
-    return (
-        <div className="mt-4 grow flex items-center justify-around">
-            <div className="mb-64">
+  if (redirect) {
+    return <Navigate to={'/'} />
+  }
 
-                <h1 className="text-4xl text-center mb-4">Login</h1>
-                <form onSubmit={handleLogin} className="max-w-md mx-auto">
-                    <input
-                        type="email"
-                        placeholder="Escriba su correo..."
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Escriba su contraseña..."
-                        value={contrasena}
-                        onChange={e => setContrasena(e.target.value)}
-                    />
-                    <button type="Submit" className="primary">Login</button>
-                    <div className="text-center py-2 text-gray-500">
-                        Aún no estás registrado? <Link className="underline text-black"
-                            to={'/register'}>Regístrate</Link>
-                    </div>
-                </form>
-            </div>
-        </div>
-    )
+  return (
+    <div className="mt-4 grow flex items-center justify-around">
+      <div className="mb-64">
+        <h1 className="text-4xl text-center mb-4">Login</h1>
+        <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
+          <input type="email"
+                 placeholder="your@email.com"
+                 value={email}
+                 onChange={ev => setEmail(ev.target.value)} />
+          <input type="password"
+                 placeholder="password"
+                 value={password}
+                 onChange={ev => setPassword(ev.target.value)} />
+          <button className="primary">Login</button>
+          <div className="text-center py-2 text-gray-500">
+            Don't have an account yet? <Link className="underline text-black" to={'/register'}>Register now</Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
-
-export default LoginPage
