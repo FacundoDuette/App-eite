@@ -91,22 +91,22 @@ const getReservaById = async (req, res) => {
     }
 }
 
-// const getReservaByuser = async (req, res) => {
-//     console.log('obtenerReservaPoruser')
-//     try {
-//         const { id } = req.params;
-//         const listaReservas = await reservas.find({ user: id });
-//         if (listaReservas.length === 0) {
-//             return res.status(404).json({ message: 'No se encontró nungina reserva para este user' })
-//         }
-//         res.status(200).json({ listaReservas })
-//         return;
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error })
-//         return;
-//     }
-// }
+const getReservaByUsuario = async (req, res) => {
+    console.log('obtenerReservaPoruser')
+    try {
+        const { id } = req.params;
+        const listaReservas = await reservas.find({ user: id });
+        if (listaReservas.length === 0) {
+            return res.status(404).json({ message: 'No se encontró nungina reserva para este user' })
+        }
+        res.status(200).json({ listaReservas })
+        return;
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error })
+        return;
+    }
+}
 
 const getReservaByalojamiento = async (req, res) => {
     console.log('obtenerReservaPoralojamiento')
@@ -129,10 +129,11 @@ const updateReserva = async (req, res) => {
     console.log('updateReserva')
     try {
         const { id } = req.params;
-        const { place ,user,checkIn,checkOut,name,phone,price } = req.body;
+        const { place, user, checkIn, checkOut, name, phone, price } = req.body;
 
         //Verificación si el user existe
         if (user == "" || user == undefined || user == null) {
+            console.log(user)
             return res.status(400).json({ message: 'El user es requerido' });
         }
         const userId = await users.findById(user);
@@ -155,11 +156,11 @@ const updateReserva = async (req, res) => {
         // }
 
         //Se procede a intentar la actualización
-        const reserva = await reservas.findByIdAndUpdate(id, { place ,user,checkIn,checkOut,name,phone,price }, { new: true, runValidators: true });
+        const reserva = await reservas.findByIdAndUpdate(id, { place, user, checkIn, checkOut, name, phone, price }, { new: true, runValidators: true });
         if (!reserva) {
             return res.status(404).json({ message: 'No se encontró la reserva' })
         }
-        res.status(200).json({ reserva })
+        res.status(200).json({ message: 'Se pudo actualizar la reserva existosamente' })
         return;
     } catch (error) {
         console.error(error);
@@ -189,7 +190,7 @@ export default {
     createReserva,
     getAllReservas,
     getReservaById,
-    // getReservaByuser,
+    getReservaByUsuario,
     getReservaByalojamiento,
     updateReserva,
     deleteReserva

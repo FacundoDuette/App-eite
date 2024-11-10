@@ -32,7 +32,7 @@ const usuario = new Schema({
         minlength: [8, 'La contraseña debe tener un minimo de 8 caracteres'],
         maxlength: 100
     },
-    fechaDeNacimiento: {
+    dateOfBirth: {
         type: Date,
         // required: [false, 'La fecha de nacimiento es requerida'],
         validate: {
@@ -42,7 +42,7 @@ const usuario = new Schema({
             message: 'La fecha de nacimiento no es valida'
         }
     },
-    foto: {
+    photo: {
         type: String,
         // required: [false, 'La foto es requerida'],
         validate: {
@@ -53,7 +53,7 @@ const usuario = new Schema({
             message: 'La foto no es valida'
         }
     },
-    contacto: {
+    phone: {
         type: String,
         // required: [false, 'El contacto es requerido'],
         validate: {
