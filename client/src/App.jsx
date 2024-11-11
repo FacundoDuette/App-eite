@@ -27,6 +27,7 @@ function App() {
           <Route path='/register' Component={RegisterPage} />
           <Route path='/account/:subpage?' Component={AccountPage} />
           <Route path='/account/:subpage/:action' Component={AccountPage} />
+          <Route path='/account/:subpage/:action/:id' Component={AccountPage} />
           <Route path='/login' Component={LoginPage} />
           <Route path='/alojamiento/:id' Component={PlacePage} />
           {/* <Route path='/logout' element={<h1 onClick={() => { navegar(-1) }}>logout</h1>} /> */}

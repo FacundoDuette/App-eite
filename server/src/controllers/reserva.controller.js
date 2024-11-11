@@ -3,10 +3,10 @@ import usuarios from '../models/usuario.model.js';
 import alojamientos from '../models/alojamiento.model.js';
 
 const createReserva = async (req, res) => {
-    console.log('Creando una reserva')
     try {
         const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas } = req.body;
 
+        console.log(usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas)
         //Verificación si el usuario existe
         if (usuario == "" || usuario == undefined || usuario == null) {
             return res.status(400).json({ message: 'El usuario es requerido' });
@@ -23,14 +23,16 @@ const createReserva = async (req, res) => {
         const hostId = await alojamientos.findById(alojamiento);
         if (!hostId) {
             return res.status(400).json({ message: 'El alojamiento no existe' });
+            console.log(hostId)
         }
 
         //Verificación de cantidadHuespedes disponibles
-        if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
+        if (cantidadHuespedes > hostId.cantidadHuespedes) {
             return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
         }
 
-        precio = hostId.precio; // Definimos el valor de la reserva igual al valor del costo del alojamiento, esto sirve de retgistro en caso el costo del alojamiento se modifique a futuro.
+        const precio = hostId.precioPorNoche // Definimos el valor de la reserva igual al valor del costo del alojamiento, esto sirve de retgistro en caso el costo del alojamiento se modifique a futuro.
+
 
         //Verificación de fechas disponibles
         const verifAloj = await reservas.find({ alojamiento: alojamiento });
@@ -39,7 +41,7 @@ const createReserva = async (req, res) => {
                 if (fechaInicio <= verifAloj[i].fechaFin) {
                     return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de inicio seleccionada' });
                 }
-                if (fechaFin >= verifAloj[i].fechaInicio){
+                if (fechaFin >= verifAloj[i].fechaInicio) {
                     return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de fin seleccionada' });
                 }
             }
@@ -48,7 +50,7 @@ const createReserva = async (req, res) => {
         //pendiente
 
         //Se crea la Reserva con los datos de user y alojamientos ya verificados
-        const reserva = await reservas.create({ usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas });
+        const reserva = await reservas.create({ usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, notas });
         const nuevaReserva = await reserva.save();
         if (!nuevaReserva) {
             return res.status(500).json({ error })
@@ -57,13 +59,12 @@ const createReserva = async (req, res) => {
         return;
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error.message , 'texto' : 'prueba de kk' })
+        res.status(500).json({ error: { message: 'prueba de kk' } })
         return;
     }
 }
 
 const getAllReservas = async (req, res) => {
-    console.log('obtenerTodasLasReservas')
     try {
         const listaReservas = await reservas.find();
         if (listaReservas.length === 0) {
@@ -79,7 +80,6 @@ const getAllReservas = async (req, res) => {
 }
 
 const getReservaById = async (req, res) => {
-    console.log('obtenerReservaPorId')
     try {
         const { id } = req.params;
         const reserva = await reservas.findById(id);
@@ -96,7 +96,6 @@ const getReservaById = async (req, res) => {
 }
 
 const getReservaByusuario = async (req, res) => {
-    console.log('obtenerReservaPorusuario')
     try {
         const { id } = req.params;
         const listaReservas = await reservas.find({ usuario: id });
@@ -113,7 +112,6 @@ const getReservaByusuario = async (req, res) => {
 }
 
 const getReservaByalojamiento = async (req, res) => {
-    console.log('obtenerReservaPoralojamiento')
     try {
         const { id } = req.params;
         const listaReservas = await reservas.find({ alojamiento: id });
@@ -130,7 +128,6 @@ const getReservaByalojamiento = async (req, res) => {
 }
 
 const updateReserva = async (req, res) => {
-    console.log('updateReserva')
     try {
         const { id } = req.params;
         const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body;
@@ -173,7 +170,6 @@ const updateReserva = async (req, res) => {
 }
 
 const deleteReserva = async (req, res) => {
-    console.log('deleteReserva')
     try {
         const { id } = req.params;
         const reserva = await reservas.findByIdAndDelete(id);

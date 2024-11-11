@@ -7,6 +7,7 @@ const rutasAlojamiento = express.Router();
 
 rutasAlojamiento.get('/'/* , authenticate */, ControladorAlojamiento.obtenerTodosLosAlojamientos);
 rutasAlojamiento.get('/:id'/* , authenticate */, ControladorAlojamiento.obtenerPorId);
+rutasAlojamiento.get('/user/:id'/* , authenticate */, ControladorAlojamiento.obtenerPorUserId);
 rutasAlojamiento.delete('/:id'/* , authenticate */, ControladorAlojamiento.borrarPorId);
 rutasAlojamiento.patch('/:id'/* , authenticate */, ControladorAlojamiento.modificarAlojamiento);
 rutasAlojamiento.post('/'/* , authenticate */, ControladorAlojamiento.agregarAlojamiento);

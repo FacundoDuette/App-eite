@@ -18,22 +18,22 @@ const ReservasSchema = new Schema({
     fechaInicio: {
         type: Date,
         required: [true, 'La fecha de inicio es requerida'],
-        validate: {
-            validator: function (value) {
-                return value >= new Date();
-            },
-            message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
-        }
+        // validate: {
+        //     validator: function (value) {
+        //         return value >= new Date();
+        //     },
+        //     message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
+        // }
     },
     fechaFin: {
         type: Date,
         required: [true, 'La fecha de fin es requerida'],
-        validate: {
-            validator: function (value) {
-                return value >= new Date();
-            },
-            message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
-        }
+        // validate: {
+        //     validator: function (value) {
+        //         return value >= new Date();
+        //     },
+        //     message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
+        // }
     },
     cantidadHuespedes: {
         type: Number,
@@ -44,6 +44,10 @@ const ReservasSchema = new Schema({
         // required: [true, 'Las notas son requeridas'],
         default: 'No hay notas'
     },
+    precio: {
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true });
 
 const Reserva = model('Reserva', ReservasSchema);

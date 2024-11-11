@@ -1,19 +1,26 @@
 import { useParams } from "react-router-dom";
 import userContext from "../components/userContext";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 
-const PlacesFormPage = () => {
-    const { user, setUser, cargado } = useContext(userContext.userContext);
-    const idUser = user._id;
-    const { action } = useParams();
+const PlaceFormPage = () => {
+    const { user } = useContext(userContext.userContext);
+    const usuarioId = user._id;
+    const { action, id } = useParams();
+
+    const [cargado, setCargado] = useState(false);
+
+    const [editar, setEditar] = useState(false);
+
+    const [errores, setErrores] = useState([]);
+
 
     const navigate = useNavigate();
-    
+
     const [titulo, setTitulo] = useState('');
     const [direccion, setDireccion] = useState('');
-    const [enlaceImagen, setEnlaceImagen] = useState('');
+    const [fotos, setFotos] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [servicios, setServicios] = useState({
         wifi: false,
@@ -74,9 +81,40 @@ const PlacesFormPage = () => {
             )
         }
     };
+
     const [informacionExtra, setInformacionExtra] = useState('');
     const [cantidadHuespedes, setCantidadHuespedes] = useState('');
     const [precioPorNoche, setPrecioPorNoche] = useState('');
+
+    const cargarDatos = async (id) => {
+        try {
+            const response = await axios.get(`/api/alojamiento/${id}`);
+            // console.log(response.data);
+            if (response.data.usuarioId == usuarioId) {
+                setInformacionExtra(response.data.informacionExtra);
+                setCantidadHuespedes(response.data.cantidadHuespedes);
+                setPrecioPorNoche(response.data.precioPorNoche);
+                setTitulo(response.data.titulo);
+                setDescripcion(response.data.descripcion);
+                setDireccion(response.data.direccion);
+                setFotos(response.data.fotos);
+                setServicios(response.data.servicios);
+                setCargado(true);
+            } else {
+                console.log('No es el dueño del alojamiento')
+            }
+        } catch (error) {
+            console.error(error);
+            setErrores(error.response.data);
+        }
+    }
+
+    useEffect(() => {
+        if (id && !cargado) {
+            cargarDatos(id);
+            setEditar(true)
+        }
+    })
 
     const toggleServicio = (servicio) => {
         setServicios((prevServicios) => ({
@@ -87,28 +125,53 @@ const PlacesFormPage = () => {
 
     const handleRegisterAlojamiento = async (e) => {
         e.preventDefault();
-        console.log(titulo, direccion, enlaceImagen, descripcion, servicios, informacionExtra, cantidadHuespedes, precioPorNoche);
         // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
-        const respuesta = await axios.post('/api/alojamiento', {
-            data: {
-                idUser,
-                titulo,
-                direccion,
-                enlaceImagen,
-                descripcion,
-                servicios,
-                informacionExtra,
-                cantidadHuespedes,
-                precioPorNoche
-            }
-        });
-        console.log(respuesta.data);
-       // navigate('/account/');
+        try {
+            const respuesta = await axios.post('/api/alojamiento', {
+                data: {
+                    usuarioId,
+                    titulo,
+                    direccion,
+                    fotos,
+                    descripcion,
+                    servicios,
+                    informacionExtra,
+                    cantidadHuespedes,
+                    precioPorNoche
+                }
+            });
+            navigate('/account/places');
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+
+    const handleEditarRegistro = async (e) => {
+        e.preventDefault();
+        // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
+        try {
+            const response = await axios.patch(`/api/alojamiento/${id}`, {
+                data: {
+                    usuarioId,
+                    titulo,
+                    direccion,
+                    fotos,
+                    descripcion,
+                    servicios,
+                    informacionExtra,
+                    cantidadHuespedes,
+                    precioPorNoche
+                }
+            });
+            navigate('/account/places')
+        } catch (error) {
+            console.log(error.response.data);
+        }
     }
 
     return (
         <div>
-            {action !== 'new' && (
+            {/* {action !== 'new' && (
                 <div className="text-center">
                     <Link className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
                         to={'/account/places/new'}>
@@ -118,50 +181,50 @@ const PlacesFormPage = () => {
                         Agregar nuevo alojamiento
                     </Link>
                 </div>
-            )}
-            {action === 'new' && (
+            )} */}
+            {(action === 'new' || action === 'edit') && (
                 <div>
-                    <form onSubmit={handleRegisterAlojamiento}>
+                    <form>
                         <h2 className="text-2xl mt-4">Título</h2>
                         <p className="text-gray-500 text-sm">El título del alojamiento debe ser corto y preciso.</p>
-                        <input 
-                            type="text" 
-                            placeholder="título" 
+                        <input
+                            type="text"
+                            placeholder="título"
                             value={titulo}
                             onChange={e => setTitulo(e.target.value)}
                         />
                         <h2 className="text-xl mt-4">Dirección</h2>
                         <p className="text-gray-500 text-sm">Dirección del alojamiento.</p>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             placeholder="direccion "
-                            value={direccion} 
+                            value={direccion}
                             onChange={e => setDireccion(e.target.value)}
                         />
                         <h2 className="text-xl mt-4">Fotos</h2>
                         <p className="text-gray-500 text-sm">Fotos del alojamiento</p>
                         <div className="flex gap-2">
-                            <input 
-                                type="text" 
-                                placeholder="agregar usando un link ...jpg" 
-                                value={enlaceImagen}
-                                onChange={e => setEnlaceImagen(e.target.value)}
+                            <input
+                                type="text"
+                                placeholder="agregar usando un link ...jpg"
+                                value={fotos}
+                                onChange={e => setFotos(e.target.value)}
                             />
                             <button className="bg-gray-200 px-4 rounded-2xl">
                                 Agregar foto
                             </button>
                         </div>
-                        <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cold-6">
+                        {/* <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cold-6">
                             <button className="flex justify-center border bg-transparent rounded-2xl p-8 text-gray-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
                                 </svg>
                                 Subir foto
                             </button>
-                        </div>
+                        </div> */}
                         <h2 className="text-xl mt-4">Descripción</h2>
                         <p className="text-gray-500 text-sm">Descripción del alojamiento</p>
-                        <textarea 
+                        <textarea
                             value={descripcion}
                             onChange={e => setDescripcion(e.target.value)}
                         ></textarea>
@@ -170,10 +233,10 @@ const PlacesFormPage = () => {
                         <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
                             {Object.entries(serviciosConIconos).map(([key, { label, icon }]) => (
                                 <label key={key} className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={servicios[key]} 
-                                        onChange={() => toggleServicio(key)} 
+                                    <input
+                                        type="checkbox"
+                                        checked={servicios[key]}
+                                        onChange={() => toggleServicio(key)}
                                     />
                                     {icon}
                                     <span>{label}</span>
@@ -182,7 +245,7 @@ const PlacesFormPage = () => {
                         </div>
                         <h2 className="text-xl mt-4">Información extra</h2>
                         <p className="text-gray-500 text-sm">Reglas de la casa, etc.</p>
-                        <textarea 
+                        <textarea
                             value={informacionExtra}
                             onChange={e => setInformacionExtra(e.target.value)}
                         ></textarea>
@@ -190,16 +253,16 @@ const PlacesFormPage = () => {
                         <div className="grid gap-2 sm:grid-cols-2">
                             <div>
                                 <h3 className="mt-2 -mb-1">Cantidad de huéspedes</h3>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     placeholder="cantidad de huéspedes"
                                     value={cantidadHuespedes}
                                     onChange={e => setCantidadHuespedes(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <h3 className="mt-2 -mb-1">Precio</h3>
-                                <input 
+                                <h3 className="mt-2 -mb-1">Precio por Noche</h3>
+                                <input
                                     type="text"
                                     placeholder="precio por noche"
                                     value={precioPorNoche}
@@ -207,7 +270,7 @@ const PlacesFormPage = () => {
                                 />
                             </div>
                         </div>
-                        <button className="primary my-4" > Agregar Alojamiento</button>
+                        <button className="primary my-4" onClick={editar ? handleEditarRegistro : handleRegisterAlojamiento}> {editar ? "Editar registro" : "Agregar Alojamiento"}</button>
                     </form>
                 </div>
             )}
@@ -215,4 +278,4 @@ const PlacesFormPage = () => {
     )
 }
 
-export default PlacesFormPage
+export default PlaceFormPage
