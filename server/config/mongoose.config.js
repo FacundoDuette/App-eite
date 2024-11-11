@@ -7,7 +7,7 @@ const URL_MONGO = process.env.MONGO_URL;
 const conectarDB = async () => {
     try {
         await mongoose.connect(URL_MONGO, {
-            dbName: "Appeitev2",
+            dbName: "Appeite",
         })
         console.log("Conectado a la base de datos");
     } catch (error) {

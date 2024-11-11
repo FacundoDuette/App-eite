@@ -1,50 +1,54 @@
 import reservas from '../models/reserva.model.js';
-import users from '../models/usuario.model.js';
+import usuarios from '../models/usuario.model.js';
 import alojamientos from '../models/alojamiento.model.js';
 
 const createReserva = async (req, res) => {
     console.log('Creando una reserva')
     try {
-        const { place, user, checkIn, checkOut, name, phone } = req.body;
-        let { price } = req.body;
+        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas } = req.body;
 
-        // Verificación si el user existe
-        if (user == "" || user == undefined || user == null) {
-            return res.status(400).json({ message: 'El user es requerido' });
+        //Verificación si el usuario existe
+        if (usuario == "" || usuario == undefined || usuario == null) {
+            return res.status(400).json({ message: 'El usuario es requerido' });
         }
-        const userId = await users.findById(user);
+        const userId = await usuarios.findById(usuario);
         if (!userId) {
-            return res.status(400).json({ message: 'El user no existe' });
+            return res.status(400).json({ message: 'El usuario no existe' });
         }
 
-        // Verificación si el alojamiento existe
-        if (place == "" || place == undefined || place == null) {
+        //Verificación si el alojamiento existe
+        if (alojamiento == "" || alojamiento == undefined || alojamiento == null) {
             return res.status(400).json({ message: 'El alojamiento es requerido' });
         }
-        const hostId = await alojamientos.findById(place);
+        const hostId = await alojamientos.findById(alojamiento);
         if (!hostId) {
             return res.status(400).json({ message: 'El alojamiento no existe' });
         }
 
-        price = hostId.price; // Definimos el valor de la reserva igual al valor del costo del alojamiento, esto sirve de registro en caso el costo del alojamiento se modifique a futuro.
+        //Verificación de cantidadHuespedes disponibles
+        if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
+            return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
+        }
 
-        // Verificación de fechas disponibles
-        // const verifAloj = await reservas.find({ place: place });
-        // if (verifAloj.length > 0) {
-        //     for (let i = 0; i < verifAloj.length; i++) {
-        //         if (checkIn <= verifAloj[i].checkOut) {
-        //             return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de inicio seleccionada' });
-        //         }
-        //         if (checkOut >= verifAloj[i].checkIn){
-        //             return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de fin seleccionada' });
-        //         }
-        //     }
-        // }
+        precio = hostId.precio; // Definimos el valor de la reserva igual al valor del costo del alojamiento, esto sirve de retgistro en caso el costo del alojamiento se modifique a futuro.
 
-        // pendiente
+        //Verificación de fechas disponibles
+        const verifAloj = await reservas.find({ alojamiento: alojamiento });
+        if (verifAloj.length > 0) {
+            for (let i = 0; i < verifAloj.length; i++) {
+                if (fechaInicio <= verifAloj[i].fechaFin) {
+                    return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de inicio seleccionada' });
+                }
+                if (fechaFin >= verifAloj[i].fechaInicio){
+                    return res.status(400).json({ message: 'El alojamiento ya se encuentra ocupado para la fecha de fin seleccionada' });
+                }
+            }
+        }
 
-        // Se crea la Reserva con los datos de user y alojamientos ya verificados
-        const reserva = await reservas.create({ user, place, checkIn, checkOut, price, name, phone });
+        //pendiente
+
+        //Se crea la Reserva con los datos de user y alojamientos ya verificados
+        const reserva = await reservas.create({ usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas });
         const nuevaReserva = await reserva.save();
         if (!nuevaReserva) {
             return res.status(500).json({ error })
@@ -53,7 +57,7 @@ const createReserva = async (req, res) => {
         return;
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error })
+        res.status(500).json({ error.message , 'texto' : 'prueba de kk' })
         return;
     }
 }
@@ -91,13 +95,13 @@ const getReservaById = async (req, res) => {
     }
 }
 
-const getReservaByUsuario = async (req, res) => {
-    console.log('obtenerReservaPoruser')
+const getReservaByusuario = async (req, res) => {
+    console.log('obtenerReservaPorusuario')
     try {
         const { id } = req.params;
-        const listaReservas = await reservas.find({ user: id });
+        const listaReservas = await reservas.find({ usuario: id });
         if (listaReservas.length === 0) {
-            return res.status(404).json({ message: 'No se encontró nungina reserva para este user' })
+            return res.status(404).json({ message: 'No se encontró nungina reserva para este usuario' })
         }
         res.status(200).json({ listaReservas })
         return;
@@ -129,38 +133,37 @@ const updateReserva = async (req, res) => {
     console.log('updateReserva')
     try {
         const { id } = req.params;
-        const { place, user, checkIn, checkOut, name, phone, price } = req.body;
+        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body;
 
-        //Verificación si el user existe
-        if (user == "" || user == undefined || user == null) {
-            console.log(user)
-            return res.status(400).json({ message: 'El user es requerido' });
+        //Verificación si el usuario existe
+        if (usuario == "" || usuario == undefined || usuario == null) {
+            return res.status(400).json({ message: 'El usuario es requerido' });
         }
-        const userId = await users.findById(user);
+        const userId = await usuarios.findById(usuario);
         if (!userId) {
-            return res.status(400).json({ message: 'El user no existe' });
+            return res.status(400).json({ message: 'El usuario no existe' });
         }
 
         //Verificación si el alojamiento existe
-        if (place == "" || place == undefined || place == null) {
+        if (alojamiento == "" || alojamiento == undefined || alojamiento == null) {
             return res.status(400).json({ message: 'El alojamiento es requerido' });
         }
-        const hostId = await alojamientos.findById(place);
+        const hostId = await alojamientos.findById(alojamiento);
         if (!hostId) {
             return res.status(400).json({ message: 'El alojamiento no existe' });
         }
 
-        // //Verificación de cantidadHuespedes disponibles
-        // if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
-        //     return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
-        // }
+        //Verificación de cantidadHuespedes disponibles
+        if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
+            return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
+        }
 
         //Se procede a intentar la actualización
-        const reserva = await reservas.findByIdAndUpdate(id, { place, user, checkIn, checkOut, name, phone, price }, { new: true, runValidators: true });
+        const reserva = await reservas.findByIdAndUpdate(id, { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas }, { new: true, runValidators: true });
         if (!reserva) {
             return res.status(404).json({ message: 'No se encontró la reserva' })
         }
-        res.status(200).json({ message: 'Se pudo actualizar la reserva existosamente' })
+        res.status(200).json({ reserva })
         return;
     } catch (error) {
         console.error(error);
@@ -190,7 +193,7 @@ export default {
     createReserva,
     getAllReservas,
     getReservaById,
-    getReservaByUsuario,
+    getReservaByusuario,
     getReservaByalojamiento,
     updateReserva,
     deleteReserva

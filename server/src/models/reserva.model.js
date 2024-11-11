@@ -1,44 +1,51 @@
 import { model, Schema } from 'mongoose';
+import usuario from './usuario.model.js';
+import alojamiento from './alojamiento.model.js';
 
-const reservaSchema = Schema({
-  place: {
-    type: Schema.Types.ObjectId,
-    required: [true, "El campo alojamiento es requerido"],
-    ref: 'Alojamiento'
-  },
+const ReservasSchema = new Schema({
+    usuario: {
+        type: Schema.Types.ObjectId,       //En este campo se cargará el id único del usuario
+        ref: usuario,
+        // type: String,       //En este campo se cargará el correo único del usuario
+        required: [true, 'El Usuario es requerido']
+    },
+    alojamiento: {
+        type: Schema.Types.ObjectId,       //En este campo se cargará el id único del alojamiento
+        ref: alojamiento,
+        // type: String,    //En este campo se cargará el id único del alojamiento
+        required: [true, 'El id del alojamiento es requerido']
+    },
+    fechaInicio: {
+        type: Date,
+        required: [true, 'La fecha de inicio es requerida'],
+        validate: {
+            validator: function (value) {
+                return value >= new Date();
+            },
+            message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
+        }
+    },
+    fechaFin: {
+        type: Date,
+        required: [true, 'La fecha de fin es requerida'],
+        validate: {
+            validator: function (value) {
+                return value >= new Date();
+            },
+            message: 'La fecha de inicio debe ser mayor o igual a la fecha actual'
+        }
+    },
+    cantidadHuespedes: {
+        type: Number,
+        required: [true, 'La cantidad de huespedes es requerida']
+    },
+    notas: {
+        type: String,
+        // required: [true, 'Las notas son requeridas'],
+        default: 'No hay notas'
+    },
+}, { timestamps: true });
 
-  user: {
-    type: Schema.Types.ObjectId,
-    required: [true, "El campo usuario es requerido"],
-    ref: 'Usuarios'
-  },
+const Reserva = model('Reserva', ReservasSchema);
 
-  checkIn: {
-    type: Date,
-    required: [true, "El campo checkIn es requerido"]
-  },
-
-  checkOut: {
-    type: Date,
-    required: [true, "El campo checkOut es requerido"]
-  },
-
-  name: {
-    type: String,
-    required: [true, "El campo nombre es requerido"]
-  },
-
-  phone: {
-    type: String,
-    required: [true, "El campo telefono es requerido"]
-  },
-
-  price: {
-    type: Number,
-    required: [true, "El campo precio es requerido"]  //Recordar que el dato de precio se obtiene directamente del alojamiento, no se solicita nada de precio al user
-  },
-
-});
-
-const reservaModel = model('Reserva', reservaSchema);
-export default reservaModel;
+export default Reserva;

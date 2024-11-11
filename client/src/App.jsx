@@ -1,39 +1,40 @@
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
-import {Route, Routes} from "react-router-dom";
-import IndexPage from "./pages/IndexPage.jsx";
-import LoginPage from "./pages/LoginPage";
-import Layout from "./Layout";
-import RegisterPage from "./pages/RegisterPage";
-import axios from "axios";
-import {UserContextProvider} from "./UserContext";
-import ProfilePage from "./pages/ProfilePage.jsx";
-import PlacesPage from "./pages/PlacesPage";
-import PlacesFormPage from "./pages/PlacesFormPage";
-import PlacePage from "./pages/PlacePage";
-import BookingsPage from "./pages/BookingsPage";
-import BookingPage from "./pages/BookingPage";
+import Layout from './Layout'
+import IndexPage from './pages/IndexPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import PlacesPage from './pages/PlacesPage'
+import PlacePage from './pages/PlacePage'
+import UserProvider from './components/userContext'
+import axios from 'axios'
+import AccountPage from './pages/AccountPage'
 
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-axios.defaults.withCredentials = true;
+const UserContextProvider = UserProvider.userContextProvider
+
+axios.defaults.withCredentials = true
 
 function App() {
+
+  const navegar = useNavigate()
+
   return (
     <UserContextProvider>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<IndexPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/account" element={<ProfilePage />} />
-          <Route path="/account/places" element={<PlacesPage />} />
-          <Route path="/account/places/new" element={<PlacesFormPage />} />
-          <Route path="/account/places/:id" element={<PlacesFormPage />} />
-          <Route path="/place/:id" element={<PlacePage />} />
-          <Route path="/account/bookings" element={<BookingsPage />} />
-          <Route path="/account/bookings/:id" element={<BookingPage />} />
+        <Route path='/' Component={Layout}>
+          <Route path='/' index Component={IndexPage} />
+          <Route path='/login' Component={LoginPage} />
+          <Route path='/register' Component={RegisterPage} />
+          <Route path='/account/:subpage?' Component={AccountPage} />
+          <Route path='/account/:subpage/:action' Component={AccountPage} />
+          <Route path='/login' Component={LoginPage} />
+          <Route path='/alojamiento/:id' Component={PlacePage} />
+          {/* <Route path='/logout' element={<h1 onClick={() => { navegar(-1) }}>logout</h1>} /> */}
+          <Route path='/*' element={<h1 onClick={() => { navegar(-1) }}>404</h1>} />
         </Route>
       </Routes>
     </UserContextProvider>
+
   )
 }
 

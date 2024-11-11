@@ -1,6 +1,6 @@
 import express from 'express';
 import reservaController from '../controllers/reserva.controller.js'
-// import authenticate from '../../config/jwt.config.js';
+import authenticate from '../../config/jwt.config.js';
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.get('/',/* authenticate, */ reservaController.getAllReservas);
 router.get('/:id',/* authenticate, */ reservaController.getReservaById);
 
 //Obtener reservas por id de usuario
-router.get('/user/:id',/* authenticate, */ reservaController.getReservaByUsuario);
+router.get('/user/:id',/* authenticate, */ reservaController.getReservaByusuario);
 
 //Obtener reservas por id de alojamiento
 router.get('/host/:id',/* authenticate, */ reservaController.getReservaByalojamiento);
