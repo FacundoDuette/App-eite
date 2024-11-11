@@ -1,27 +1,28 @@
 import express from 'express';
 import reservaController from '../controllers/reserva.controller.js'
+import authenticate from '../../config/jwt.config.js';
 
 const router = express.Router();
 
 //Crear reserva
-router.post('/', reservaController.createReserva);
+router.post('/'/* , authenticate */, reservaController.createReserva);
 
 //Obtener todas las reservas
-router.get('/', reservaController.getAllReservas);
+router.get('/',/* authenticate, */ reservaController.getAllReservas);
 
 //Obtener reserva por id de reserva
-router.get('/:id', reservaController.getReservaById);
+router.get('/:id',/* authenticate, */ reservaController.getReservaById);
 
 //Obtener reservas por id de usuario
-router.get('/user/:id', reservaController.getReservaByUserId);
+router.get('/user/:id',/* authenticate, */ reservaController.getReservaByusuario);
 
 //Obtener reservas por id de alojamiento
-router.get('/host/:id', reservaController.getReservaByAlojamientoId);
+router.get('/host/:id',/* authenticate, */ reservaController.getReservaByalojamiento);
 
 //Modificar reserva
-router.patch('/:id')
+router.patch('/:id',/* authenticate, */ reservaController.updateReserva)
 
 //Eliminar reserva
-router.delete('/:id')
+router.delete('/:id',/* authenticate, */ reservaController.deleteReserva)
 
 export default router;
