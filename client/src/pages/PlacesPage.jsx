@@ -23,13 +23,13 @@ const PlacesPage = () => {
         if (action !== 'new' && action !== 'edit') {
             cargarAlojamientosUser();
         }
-    }, [action]);
+    },);
 
     return (
         <div className="px-6 py-4">
             {action !== 'new' && action !== 'edit' && (
                 <div className="text-center mb-6">
-                    <Link 
+                    <Link
                         className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
                         to={'/account/places/new'}
                     >
@@ -38,7 +38,7 @@ const PlacesPage = () => {
                         </svg>
                         Agregar nuevo alojamiento
                     </Link>
-                    
+
                     {/* Carrusel horizontal */}
                     <div className="flex space-x-4 overflow-x-scroll py-4 mt-4 scrollbar-hide snap-x snap-mandatory">
                         {userAlojamientos.length === 0 ? (

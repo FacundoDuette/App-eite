@@ -11,7 +11,7 @@ const ReservationsPage = () => {
     const { user } = useContext(userContext.userContext)
 
     const { action } = useParams();
-    const [reservas, setReservas] = useState([])
+    const [reservas, setReservas] = useState(['', ''])
     const [cargado, setCargado] = useState(false)
 
     const cargarReservas = async () => {
@@ -21,7 +21,7 @@ const ReservationsPage = () => {
             setCargado(true)
         }
         catch (error) {
-            // console.log(error.response.data.message)
+            console.log(error.response.data.message)
         }
     }
 
@@ -44,21 +44,20 @@ const ReservationsPage = () => {
                     </Link>
                 </div>
             )}
-            {action !== 'new' && reservas?.listaReservas?.length > 0(
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {reservas?.listaReservas?.map((reserva, index) => {
-                        return (<div key={reserva._id} className="bg-white shadow-md rounded-lg p-4">
-                            <h2 className="text-xl font-bold mb-2">{reserva.usuario}</h2>
-                            <h3 className="text-xl font-bold mb-2">{reserva.alojamiento}</h3>
-                            <h4 className="text-xl font-bold mb-2">{dayjs(reserva.fechaInicio).format('DD/MM/YYYY')} - {dayjs(reserva.fechaFin).format('DD/MM/YYYY')}</h4>
-                            <h4 className="text-xl font-bold mb-2" > {reserva.cantidadHuespedes} - {reserva.precio}$ / noche</h4>
-                            <p className="text-gray-600 mb-2">{reserva.descripcion}</p>
-                        </div>)
-                    })}
-                </div>
-            )}
             {
-                action !== 'new' && reservas?.listaReservas?.length === 0 && <h3>No se encontraron reservas para este usuario</h3>
+                (action !== 'new') && reservas?.listaReservas?.lenght > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {reservas?.listaReservas?.map((reserva, index) => {
+                            return (<div key={reserva._id} className="bg-white shadow-md rounded-lg p-4">
+                                <h2 className="text-xl font-bold mb-2">{reserva.usuario}</h2>
+                                <h3 className="text-xl font-bold mb-2">{reserva.alojamiento}</h3>
+                                <h4 className="text-xl font-bold mb-2">{dayjs(reserva.fechaInicio).format('DD/MM/YYYY')} - {dayjs(reserva.fechaFin).format('DD/MM/YYYY')}</h4>
+                                <h4 className="text-xl font-bold mb-2" > {reserva.cantidadHuespedes} - {reserva.precio}$ / noche</h4>
+                                <p className="text-gray-600 mb-2">{reserva.descripcion}</p>
+                            </div>)
+                        })}
+                    </div>
+                ) : <h3>No se encontraron reservas para este usuario</h3>
             }
             {action === 'new' && (
                 <ReservationsForm />

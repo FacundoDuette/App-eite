@@ -40,21 +40,24 @@ const ReservationsForm = () => {
         try {
             const response = await axios.post('/api/reserva', { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas })
             console.log(response)
+            navegar('/account/bookings')
         } catch (error) {
             console.log(error)
         }
     }
 
     useEffect(() => {
-        // (user && cargado) && setUsuario(user._id)
-        // id && setAlojamiento(id)
-        // id && cargarAlojamiento()
+        if (user && !cargado) {
+            // setUsuario(user._id);
+            id && setAlojamiento(id)
+            id && cargarAlojamiento()
+        }
     })
 
     return (
         <>
             <h1>Reservas</h1>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <div>
                     <label>Fecha Inicio</label>
                     <input type="date" value={dayjs(fechaInicio).format('YYYY-MM-DD')} onChange={(e) => setFechaInicio(dayjs(e.target.value).format('YYYY-MM-DD'))} />
@@ -71,7 +74,7 @@ const ReservationsForm = () => {
                     <label>Notas</label>
                     <input type="text" value={notas} onChange={(e) => setNotas(e.target.value)} />
                 </div>
-                <button type='submit'>Enviar datos</button>
+                <button type='submit' onClick={handleSubmit}>Enviar datos</button>
             </form>
         </>
     )

@@ -113,6 +113,7 @@ const PlaceFormPage = () => {
         if (id && !cargado) {
             cargarDatos(id);
             setEditar(true)
+            setCargado(true);
         }
     })
 
@@ -140,6 +141,7 @@ const PlaceFormPage = () => {
                     precioPorNoche
                 }
             });
+            console.log(respuesta.data);
             navigate('/account/places');
         } catch (error) {
             console.log(error.response.data);
@@ -163,6 +165,7 @@ const PlaceFormPage = () => {
                     precioPorNoche
                 }
             });
+            console.log(response.data);
             navigate('/account/places')
         } catch (error) {
             console.log(error.response.data);
@@ -171,27 +174,16 @@ const PlaceFormPage = () => {
 
     return (
         <div>
-            {/* {action !== 'new' && (
-                <div className="text-center">
-                    <Link className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
-                        to={'/account/places/new'}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Agregar nuevo alojamiento
-                    </Link>
-                </div>
-            )} */}
             {(action === 'new' || action === 'edit') && (
                 <div>
-                    <form>
+                    <form /* onSubmit={editar ? handleEditarRegistro : handleRegisterAlojamiento} */>
                         <h2 className="text-2xl mt-4">Título</h2>
                         <p className="text-gray-500 text-sm">El título del alojamiento debe ser corto y preciso.</p>
                         <input
                             type="text"
                             placeholder="título"
                             value={titulo}
-                            onChange={e => setTitulo(e.target.value)}
+                            onChange={(e) => setTitulo(e.target.value)}
                         />
                         <h2 className="text-xl mt-4">Dirección</h2>
                         <p className="text-gray-500 text-sm">Dirección del alojamiento.</p>
@@ -199,7 +191,7 @@ const PlaceFormPage = () => {
                             type="text"
                             placeholder="direccion "
                             value={direccion}
-                            onChange={e => setDireccion(e.target.value)}
+                            onChange={(e) => setDireccion(e.target.value)}
                         />
                         <h2 className="text-xl mt-4">Fotos</h2>
                         <p className="text-gray-500 text-sm">Fotos del alojamiento</p>
@@ -208,7 +200,7 @@ const PlaceFormPage = () => {
                                 type="text"
                                 placeholder="agregar usando un link ...jpg"
                                 value={fotos}
-                                onChange={e => setFotos(e.target.value)}
+                                onChange={(e) => setFotos(e.target.value)}
                             />
                             <button className="bg-gray-200 px-4 rounded-2xl">
                                 Agregar foto
@@ -226,7 +218,7 @@ const PlaceFormPage = () => {
                         <p className="text-gray-500 text-sm">Descripción del alojamiento</p>
                         <textarea
                             value={descripcion}
-                            onChange={e => setDescripcion(e.target.value)}
+                            onChange={(e) => setDescripcion(e.target.value)}
                         ></textarea>
                         <h2 className="text-xl mt-4">Servicios</h2>
                         <p className="text-gray-500 text-sm">Servicios del alojamiento</p>
@@ -247,7 +239,7 @@ const PlaceFormPage = () => {
                         <p className="text-gray-500 text-sm">Reglas de la casa, etc.</p>
                         <textarea
                             value={informacionExtra}
-                            onChange={e => setInformacionExtra(e.target.value)}
+                            onChange={(e) => setInformacionExtra(e.target.value)}
                         ></textarea>
                         <p className="text-gray-500 text-sm">Fijar cantidad máxima de huéspedes y precio por el alojamiento.</p>
                         <div className="grid gap-2 sm:grid-cols-2">
@@ -257,7 +249,7 @@ const PlaceFormPage = () => {
                                     type="text"
                                     placeholder="cantidad de huéspedes"
                                     value={cantidadHuespedes}
-                                    onChange={e => setCantidadHuespedes(e.target.value)}
+                                    onChange={(e) => setCantidadHuespedes(e.target.value)}
                                 />
                             </div>
                             <div>
@@ -266,11 +258,11 @@ const PlaceFormPage = () => {
                                     type="text"
                                     placeholder="precio por noche"
                                     value={precioPorNoche}
-                                    onChange={e => setPrecioPorNoche(e.target.value)}
+                                    onChange={(e) => setPrecioPorNoche(e.target.value)}
                                 />
                             </div>
                         </div>
-                        <button className="primary my-4" onClick={editar ? handleEditarRegistro : handleRegisterAlojamiento}> {editar ? "Editar registro" : "Agregar Alojamiento"}</button>
+                        <button className="primary my-4" /* type="submit" */ onClick={editar ? handleEditarRegistro : handleRegisterAlojamiento}> {editar ? "Editar registro" : "Agregar Alojamiento"}</button>
                     </form>
                 </div>
             )}
