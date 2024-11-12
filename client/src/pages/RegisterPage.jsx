@@ -7,6 +7,7 @@ const RegisterPage = () => {
     const [apellido, setApellido] = useState('');
     const [email, setEmail] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const [confirmContrasena, setConfirmContrasena] = useState('');
     const [fechaDeNacimiento, setFechaDeNacimiento] = useState('');
     const [foto, setFoto] = useState('');
     const [contacto, setContacto] = useState('');
@@ -27,7 +28,8 @@ const RegisterPage = () => {
                     foto,
                     contacto
                 },
-                contrasena
+                contrasena,
+                confirmContrasena
             }
         });
         console.log(respuesta.data);
@@ -62,6 +64,12 @@ const RegisterPage = () => {
                         placeholder="Escriba su contraseña..."
                         value={contrasena}
                         onChange={e => setContrasena(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Escriba su confirmación de contraseña..."
+                        value={confirmContrasena}
+                        onChange={e => setConfirmContrasena(e.target.value)}
                     />
                     <input
                         type="date"

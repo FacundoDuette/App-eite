@@ -5,6 +5,7 @@ import axios from "axios";
 import PlacesPage from "./PlacesPage";
 // import ReservationsForm from "./ReservationsForm";
 import ReservationsPage from "./ReservationsPage";
+import dayjs from "dayjs";
 // import Reservations from "./Reservations"
 
 const AccountPage = () => {
@@ -71,26 +72,26 @@ const AccountPage = () => {
             <p>{user.email}</p> */}
             {subpage === 'profile' && (
                 <div className="text-center max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
-                <img
-                    src={user.foto}
-                    alt="Foto de perfil"
-                    className="w-32 h-32 mx-auto rounded-full object-cover shadow-md"
-                />
-                <h2 className="text-2xl font-semibold mt-4">{user.nombre} {user.apellido}</h2>
-                <p className="text-gray-600">{user.email}</p>
-                <div className="flex flex-col items-center mt-4 space-y-2">
-                    <p className="text-gray-700 font-medium">Teléfono:</p>
-                    <p className="text-gray-600">{user.contacto}</p>
-                    <p className="text-gray-700 font-medium">Fecha de nacimiento:</p>
-                    <p className="text-gray-600">{user.fechaDeNacimiento}</p>
+                    <img
+                        src={user.foto}
+                        alt="Foto de perfil"
+                        className="w-32 h-32 mx-auto rounded-full object-cover shadow-md"
+                    />
+                    <h2 className="text-2xl font-semibold mt-4">{user.nombre} {user.apellido}</h2>
+                    <p className="text-gray-600">{user.email}</p>
+                    <div className="flex flex-col items-center mt-4 space-y-2">
+                        <p className="text-gray-700 font-medium">Teléfono:</p>
+                        <p className="text-gray-600">{user.contacto}</p>
+                        <p className="text-gray-700 font-medium">Fecha de nacimiento:</p>
+                        <p className="text-gray-600">{dayjs(user.fechaDeNacimiento).format('DD/MM/YYYY')}</p>
+                    </div>
+                    <button
+                        onClick={logOut}
+                        className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg mt-6 transition-colors duration-300"
+                    >
+                        Logout
+                    </button>
                 </div>
-                <button
-                    onClick={logOut}
-                    className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg mt-6 transition-colors duration-300"
-                >
-                    Logout
-                </button>
-            </div>
             )}
             {subpage === 'places' && (
                 <PlacesPage />
