@@ -1,29 +1,100 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useState, useEffect, useContext } from "react";
 import userContext from "../components/userContext";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import { useNavigate, useParams } from "react-router-dom";
+dayjs.extend(isBetween);
 
 const PlacePage = () => {
     const { user } = useContext(userContext.userContext);
-    const { id } = useParams();
-    const [alojamiento, setAlojamiento] = useState(null);
     const navegar = useNavigate();
+    const { id } = useParams();
+
+    const [alojamiento, setAlojamiento] = useState(null);
+    const [fechaInicio, setFechaInicio] = useState(dayjs().format("YYYY-MM-DD"));
+    const [fechaFin, setFechaFin] = useState(dayjs().format("YYYY-MM-DD"));
+    const [cantidadHuespedes, setCantidadHuespedes] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [fechasReservadas, setFechasReservadas] = useState([]);
+
+    const cargarAlojamiento = async () => {
+        try {
+            const response = await axios.get(`/api/alojamiento/${id}`);
+            setAlojamiento(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const cargarFechasReservadas = async () => {
+        try {
+            const response = await axios.get(`/api/reserva/fechas-reservadas/${id}`);
+            setFechasReservadas(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    // Función auxiliar para verificar si una fecha está en el rango reservado
+    const isDateDisabled = (date) => {
+        return fechasReservadas.some(({ fechaInicio, fechaFin }) => {
+            const startDate = dayjs(fechaInicio);
+            const endDate = dayjs(fechaFin);
+            return dayjs(date).isBetween(startDate, endDate, null, '[]');
+        });
+    };
+
+
+    const handleCantidadHuespedes = (e) => {
+        const value = parseInt(e.target.value);
+        if (value <= alojamiento.cantidadHuespedes) {
+            setCantidadHuespedes(value);
+        } else {
+            alert(`La capacidad máxima de este alojamiento es de ${alojamiento.cantidadHuespedes} huéspedes.`);
+        }
+    };
+
+    const calcularTotal = () => {
+        const dias = dayjs(fechaFin).diff(dayjs(fechaInicio), "day");
+        setTotal(dias * alojamiento.precioPorNoche);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!user) {
+            return navegar("/login");
+        }
+        try {
+            await axios.post("/api/reserva", {
+                usuario: user._id,
+                alojamiento: id,
+                fechaInicio,
+                fechaFin,
+                cantidadHuespedes
+            });
+            console.log("Reserva confirmada");
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
-        if (!id) return;
-        axios.get(`/api/alojamiento/${id}`).then(response => setAlojamiento(response.data));
+        if (id) {
+            cargarAlojamiento();
+            cargarFechasReservadas();
+        }
     }, [id]);
+
+    useEffect(() => {
+        if (fechaInicio && fechaFin && alojamiento) {
+            calcularTotal();
+        }
+    }, [fechaInicio, fechaFin, alojamiento]);
 
     if (!alojamiento) return '';
 
-    const handleReserva = () => {
-        if (!user) return navegar('/login');
-        return navegar(`/account/bookings/new/${id}`);
-    }
-
     return (
         <div className="flex justify-center py-8 px-4">
-            <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+            <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg overflow-hidden">
                 {/* Título y Ubicación */}
                 <div className="p-6">
                     <h1 className="text-3xl font-semibold mb-2">{alojamiento.titulo}</h1>
@@ -46,21 +117,62 @@ const PlacePage = () => {
                         )}
                     </div>
 
-                    {/* Sección de Reserva */}
-                    <div className="flex flex-col justify-between bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                        <div>
-                            <div className="flex items-baseline space-x-1 mb-4">
-                                <span className="text-3xl font-bold">${alojamiento.precioPorNoche}</span>
-                                <span className="text-lg text-gray-600">/ noche</span>
-                            </div>
-                            <p className="text-gray-700 mb-4"><strong>Capacidad:</strong> {alojamiento.cantidadHuespedes} huéspedes</p>
+                    {/* Sección de Reserva Minimalista */}
+                    <div className="p-6 bg-white rounded-lg shadow-md">
+                        <div className="flex items-baseline space-x-1 mb-6">
+                            <span className="text-3xl font-bold">${alojamiento.precioPorNoche}</span>
+                            <span className="text-lg text-gray-600">/ noche</span>
                         </div>
-                        <button 
-                            onClick={handleReserva} 
-                            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-lg text-lg mt-4 transition-colors"
-                        >
-                            Reservar
-                        </button>
+
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* Fecha de Inicio y Fin */}
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Fecha de Inicio */}
+                                <div>
+                                    <label className="text-gray-700 text-sm">Check-in</label>
+                                    <input 
+                                        type="date" 
+                                        value={fechaInicio}
+                                        onChange={(e) => setFechaInicio(e.target.value)}
+                                        className="w-full border-b border-gray-300 focus:outline-none focus:border-black p-1 text-sm"
+                                        disabled={isDateDisabled(fechaInicio)}
+                                    />
+                                </div>
+
+                                {/* Fecha de Fin */}
+                                <div>
+                                    <label className="text-gray-700 text-sm">Check-out</label>
+                                    <input 
+                                        type="date" 
+                                        value={fechaFin}
+                                        onChange={(e) => setFechaFin(e.target.value)}
+                                        className="w-full border-b border-gray-300 focus:outline-none focus:border-black p-1 text-sm"
+                                        disabled={isDateDisabled(fechaFin)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Cantidad de Huéspedes */}
+                            <div>
+                                <label className="text-gray-700 text-sm">Huéspedes</label>
+                                <input 
+                                    type="number" 
+                                    min="1"
+                                    max={alojamiento.cantidadHuespedes}
+                                    value={cantidadHuespedes} 
+                                    onChange={handleCantidadHuespedes} 
+                                    className="w-full border-b border-gray-300 focus:outline-none focus:border-black p-1 text-sm"
+                                />
+                            </div>
+
+                            {/* Total y botón de confirmación */}
+                            <div className="flex items-center justify-between mt-6">
+                                <span className="text-lg font-semibold">Total: ${total}</span>
+                                <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Reservar
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 

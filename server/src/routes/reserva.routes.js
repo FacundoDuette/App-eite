@@ -25,4 +25,7 @@ router.patch('/:id',/* authenticate, */ reservaController.updateReserva)
 //Eliminar reserva
 router.delete('/:id',/* authenticate, */ reservaController.deleteReserva)
 
+// Obtener fechas reservadas por id de alojamiento
+router.get('/fechas-reservadas/:alojamientoId', reservaController.obtenerFechasReservadas);
+
 export default router;

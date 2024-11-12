@@ -185,6 +185,25 @@ const deleteReserva = async (req, res) => {
     }
 }
 
+const obtenerFechasReservadas = async (req, res) => {
+    try {
+        const { alojamientoId } = req.params;
+        // Buscar reservas para el alojamiento específico
+        const reservasExistentes = await reservas.find({ alojamiento: alojamientoId });
+
+        // Crear un array de rangos de fechas reservadas
+        const fechasReservadas = reservasExistentes.map(reserva => ({
+            fechaInicio: reserva.fechaInicio,
+            fechaFin: reserva.fechaFin
+        }));
+
+        res.status(200).json(fechasReservadas);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al obtener las fechas reservadas." });
+    }
+};
+
 export default {
     createReserva,
     getAllReservas,
@@ -192,5 +211,6 @@ export default {
     getReservaByusuario,
     getReservaByalojamiento,
     updateReserva,
-    deleteReserva
+    deleteReserva,
+    obtenerFechasReservadas
 }
