@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom";
-import ReservationsForm from "../components/ReservationsForm";
+// import ReservationsForm from "../components/ReservationsForm";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import userContext from "../components/userContext";
+import PlacePage from "./PlacePage";
 
 
 const ReservationsPage = () => {
@@ -17,7 +18,7 @@ const ReservationsPage = () => {
     const cargarReservas = async () => {
         try {
             const response = await axios.get(`/api/reserva/user/${user._id}`)
-            console.log(response.data)
+            // console.log(response.data)
             setReservas(response.data.listaReservas)
             setCargado(true)
         }
@@ -62,7 +63,7 @@ const ReservationsPage = () => {
                 ) : (action !== 'new') && <h3>No hay reservas registradas para este usuario</h3>
             }
             {action === 'new' && (
-                <ReservationsForm />
+                <PlacePage />
             )}
             {/* {action === 'edit' && (
                 <ReservationsForm />
