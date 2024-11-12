@@ -44,14 +44,6 @@ const usuario = new Schema({
     },
     foto: {
         type: String,
-        required: [false, 'La foto es requerida'],
-        validate: {
-            validator: function (value) {
-                const regex = /(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/;
-                return regex.test(value);
-            },
-            message: 'La foto no es valida'
-        }
     },
     contacto: {
         type: String,
@@ -62,15 +54,6 @@ const usuario = new Schema({
                 return regex.test(value);
             },
             message: 'El contacto no es valido'
-        }
-    },
-    visitas: {
-        type: Number,
-        validate: {
-            validator: function (value) {
-                return value >= 0;
-            },
-            message: 'Las visitas no son validas'
         }
     }
 }, { timestamps: true });

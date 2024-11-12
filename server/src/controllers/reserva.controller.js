@@ -98,18 +98,18 @@ const getReservaById = async (req, res) => {
 const getReservaByusuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const listaReservas = await reservas.find({ usuario: id });
+        const listaReservas = await reservas.find({ usuario: id }).populate('alojamiento', 'titulo direccion'); // Incluye título y dirección
+
         if (listaReservas.length === 0) {
-            return res.status(404).json({ message: 'No se encontró nungina reserva para este usuario' })
+            return res.status(404).json({ message: 'No se encontró ninguna reserva para este usuario' });
         }
-        res.status(200).json({ listaReservas })
-        return;
+
+        res.status(200).json({ listaReservas });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error })
-        return;
+        res.status(500).json({ error });
     }
-}
+};
 
 const getReservaByalojamiento = async (req, res) => {
     try {

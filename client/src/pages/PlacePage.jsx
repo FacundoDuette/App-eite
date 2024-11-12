@@ -82,6 +82,7 @@ const PlacePage = () => {
             cargarAlojamiento();
             cargarFechasReservadas();
         }
+        
     }, [id]);
 
     useEffect(() => {

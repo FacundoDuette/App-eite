@@ -1,6 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import userContext from "../components/userContext";
-import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 
@@ -8,14 +7,9 @@ const PlaceFormPage = () => {
     const { user } = useContext(userContext.userContext);
     const usuarioId = user._id;
     const { action, id } = useParams();
-
     const [cargado, setCargado] = useState(false);
-
     const [editar, setEditar] = useState(false);
-
     const [errores, setErrores] = useState([]);
-
-
     const navigate = useNavigate();
 
     const [titulo, setTitulo] = useState('');
@@ -51,8 +45,8 @@ const PlaceFormPage = () => {
         mascotas: {
             label: "Mascotas",
             icon: (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904" />
+                <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" className="size-6">
+                    <path d="m3.178,14c-.541,0-1.072-.201-1.549-.589-.854-.694-1.44-1.924-1.57-3.292-.211-2.222.854-3.909,2.589-4.104.707-.077,1.408.13,1.972.588.755.614,1.236,1.633,1.354,2.871h0c.224,2.345-.896,4.327-2.55,4.512-.082.009-.163.014-.244.014Zm-.232-7c-.062,0-.125.003-.187.011-1.16.129-1.861,1.369-1.705,3.015.105,1.106.556,2.082,1.206,2.61.234.191.604.408,1.051.357,1.069-.119,1.832-1.687,1.667-3.423h0c-.092-.969-.443-1.746-.989-2.189-.309-.25-.666-.38-1.043-.38Zm17.876,7c-.081,0-.163-.005-.244-.014-1.653-.185-2.773-2.167-2.55-4.512.118-1.237.598-2.257,1.354-2.871.563-.458,1.267-.665,1.972-.588,1.736.194,2.801,1.882,2.589,4.104-.13,1.367-.717,2.598-1.57,3.292-.478.388-1.009.589-1.549.589Zm.232-7c-.377,0-.734.13-1.043.38-.545.443-.896,1.221-.989,2.189-.165,1.736.598,3.304,1.667,3.423.444.05.817-.167,1.051-.357.65-.528,1.101-1.503,1.206-2.61.157-1.646-.544-2.885-1.705-3.015-.062-.007-.125-.011-.187-.011Zm-5.258,1c-.078,0-.155-.004-.233-.012-.831-.086-1.55-.629-2.024-1.528-.439-.833-.619-1.889-.506-2.972C13.266,1.26,14.662-.17,16.396.015c.835.087,1.555.545,2.026,1.29.471.745.661,1.714.546,2.803-.234,2.239-1.604,3.893-3.171,3.893Zm.316-7c-1.077,0-1.922,1.035-2.085,2.592-.093.889.048,1.742.396,2.401.313.594.755.949,1.243,1,1.077.102,2.126-1.258,2.307-2.991h0c.09-.862-.047-1.61-.397-2.164-.309-.487-.752-.774-1.284-.83-.061-.006-.12-.009-.179-.009Zm-7.909,7c-1.568,0-2.937-1.653-3.171-3.893h0c-.114-1.088.075-2.058.546-2.803C6.05.56,6.77.102,7.604.015c1.75-.188,3.13,1.245,3.362,3.472.113,1.084-.066,2.14-.506,2.973-.474.899-1.193,1.441-2.024,1.528-.078.008-.156.012-.233.012Zm-.316-7c-.059,0-.119.003-.179.009-.532.056-.976.343-1.284.83-.35.553-.487,1.301-.397,2.164h0c.181,1.733,1.241,3.093,2.307,2.991.488-.051.93-.406,1.243-1,.348-.66.489-1.513.396-2.402-.163-1.556-1.008-2.591-2.085-2.591Zm9.613,23c-.734,0-1.476-.211-2.261-.434-.933-.265-1.99-.566-3.239-.566s-2.307.301-3.239.566c-.785.223-1.526.434-2.261.434-1.686,0-3.5-1.095-3.5-3.5,0-4.708,4.923-8.5,9-8.5s9,3.792,9,8.5c0,2.405-1.814,3.5-3.5,3.5Zm-5.5-2c1.389,0,2.518.321,3.513.604.747.212,1.393.396,1.987.396,1.153,0,2.5-.655,2.5-2.5,0-4.039-4.399-7.5-8-7.5s-8,3.461-8,7.5c0,1.845,1.347,2.5,2.5,2.5.595,0,1.24-.184,1.987-.396.995-.283,2.124-.604,3.513-.604Z" />
                 </svg>
             )
         },
@@ -89,8 +83,7 @@ const PlaceFormPage = () => {
     const cargarDatos = async (id) => {
         try {
             const response = await axios.get(`/api/alojamiento/${id}`);
-            // console.log(response.data);
-            if (response.data.usuarioId == usuarioId) {
+            if (response.data.usuarioId === usuarioId) {
                 setInformacionExtra(response.data.informacionExtra);
                 setCantidadHuespedes(response.data.cantidadHuespedes);
                 setPrecioPorNoche(response.data.precioPorNoche);
@@ -100,22 +93,20 @@ const PlaceFormPage = () => {
                 setFotos(response.data.fotos);
                 setServicios(response.data.servicios);
                 setCargado(true);
-            } else {
-                console.log('No es el dueño del alojamiento')
             }
         } catch (error) {
             console.error(error);
             setErrores(error.response.data);
         }
-    }
+    };
 
     useEffect(() => {
         if (id && !cargado) {
             cargarDatos(id);
-            setEditar(true)
+            setEditar(true);
             setCargado(true);
         }
-    })
+    }, [id, cargado]);
 
     const toggleServicio = (servicio) => {
         setServicios((prevServicios) => ({
@@ -124,148 +115,137 @@ const PlaceFormPage = () => {
         }));
     };
 
-    const handleRegisterAlojamiento = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
+        const data = {
+            usuarioId,
+            titulo,
+            direccion,
+            fotos,
+            descripcion,
+            servicios,
+            informacionExtra,
+            cantidadHuespedes,
+            precioPorNoche
+        };
         try {
-            const respuesta = await axios.post('/api/alojamiento', {
-                data: {
-                    usuarioId,
-                    titulo,
-                    direccion,
-                    fotos,
-                    descripcion,
-                    servicios,
-                    informacionExtra,
-                    cantidadHuespedes,
-                    precioPorNoche
-                }
-            });
-            console.log(respuesta.data);
+            const response = editar
+                ? await axios.patch(`/api/alojamiento/${id}`, data)
+                : await axios.post('/api/alojamiento', { data });
+            console.log(response.data);
             navigate('/account/places');
         } catch (error) {
             console.log(error.response.data);
         }
-    }
-
-    const handleEditarRegistro = async (e) => {
-        e.preventDefault();
-        // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
-        try {
-            const response = await axios.patch(`/api/alojamiento/${id}`, {
-                usuarioId,
-                titulo,
-                direccion,
-                fotos,
-                descripcion,
-                servicios,
-                informacionExtra,
-                cantidadHuespedes,
-                precioPorNoche
-            });
-            console.log(response.data);
-            navigate('/account/places')
-        } catch (error) {
-            console.log(error.response.data);
-        }
-    }
+    };
 
     return (
-        <div>
-            {(action === 'new' || action === 'edit') && (
-                <div>
-                    <form /* onSubmit={editar ? handleEditarRegistro : handleRegisterAlojamiento} */>
-                        <h2 className="text-2xl mt-4">Título</h2>
-                        <p className="text-gray-500 text-sm">El título del alojamiento debe ser corto y preciso.</p>
-                        <input
-                            type="text"
-                            placeholder="título"
-                            value={titulo}
-                            onChange={(e) => setTitulo(e.target.value)}
-                        />
-                        <h2 className="text-xl mt-4">Dirección</h2>
-                        <p className="text-gray-500 text-sm">Dirección del alojamiento.</p>
-                        <input
-                            type="text"
-                            placeholder="direccion "
-                            value={direccion}
-                            onChange={(e) => setDireccion(e.target.value)}
-                        />
-                        <h2 className="text-xl mt-4">Fotos</h2>
-                        <p className="text-gray-500 text-sm">Fotos del alojamiento</p>
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                placeholder="agregar usando un link ...jpg"
-                                value={fotos}
-                                onChange={(e) => setFotos(e.target.value)}
-                            />
-                            <button className="bg-gray-200 px-4 rounded-2xl">
-                                Agregar foto
-                            </button>
-                        </div>
-                        {/* <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cold-6">
-                            <button className="flex justify-center border bg-transparent rounded-2xl p-8 text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                </svg>
-                                Subir foto
-                            </button>
-                        </div> */}
-                        <h2 className="text-xl mt-4">Descripción</h2>
-                        <p className="text-gray-500 text-sm">Descripción del alojamiento</p>
-                        <textarea
-                            value={descripcion}
-                            onChange={(e) => setDescripcion(e.target.value)}
-                        ></textarea>
-                        <h2 className="text-xl mt-4">Servicios</h2>
-                        <p className="text-gray-500 text-sm">Servicios del alojamiento</p>
-                        <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-                            {Object.entries(serviciosConIconos).map(([key, { label, icon }]) => (
-                                <label key={key} className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={servicios[key]}
-                                        onChange={() => toggleServicio(key)}
-                                    />
-                                    {icon}
-                                    <span>{label}</span>
-                                </label>
-                            ))}
-                        </div>
-                        <h2 className="text-xl mt-4">Información extra</h2>
-                        <p className="text-gray-500 text-sm">Reglas de la casa, etc.</p>
-                        <textarea
-                            value={informacionExtra}
-                            onChange={(e) => setInformacionExtra(e.target.value)}
-                        ></textarea>
-                        <p className="text-gray-500 text-sm">Fijar cantidad máxima de huéspedes y precio por el alojamiento.</p>
-                        <div className="grid gap-2 sm:grid-cols-2">
-                            <div>
-                                <h3 className="mt-2 -mb-1">Cantidad de huéspedes</h3>
-                                <input
-                                    type="text"
-                                    placeholder="cantidad de huéspedes"
-                                    value={cantidadHuespedes}
-                                    onChange={(e) => setCantidadHuespedes(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <h3 className="mt-2 -mb-1">Precio por Noche</h3>
-                                <input
-                                    type="text"
-                                    placeholder="precio por noche"
-                                    value={precioPorNoche}
-                                    onChange={(e) => setPrecioPorNoche(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <button className="primary my-4" /* type="submit" */ onClick={editar ? handleEditarRegistro : handleRegisterAlojamiento}> {editar ? "Editar registro" : "Agregar Alojamiento"}</button>
-                    </form>
-                </div>
-            )}
-        </div>
-    )
-}
+        <div className="max-w-2xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg">
+            <form onSubmit={handleSubmit}>
+                <h2 className="text-3xl font-bold mb-6 text-center">{editar ? "Editar Alojamiento" : "Agregar Alojamiento"}</h2>
 
-export default PlaceFormPage
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold">Título</label>
+                    <input
+                        type="text"
+                        placeholder="Título del alojamiento"
+                        value={titulo}
+                        onChange={(e) => setTitulo(e.target.value)}
+                        className="w-full p-2 mt-1 border border-gray-300 rounded"
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold">Dirección</label>
+                    <input
+                        type="text"
+                        placeholder="Dirección"
+                        value={direccion}
+                        onChange={(e) => setDireccion(e.target.value)}
+                        className="w-full p-2 mt-1 border border-gray-300 rounded"
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold">Fotos</label>
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            placeholder="Agregar link de imagen"
+                            value={fotos}
+                            onChange={(e) => setFotos(e.target.value)}
+                            className="w-full p-2 mt-1 border border-gray-300 rounded"
+                        />
+                        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Agregar</button>
+                    </div>
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold">Descripción</label>
+                    <textarea
+                        placeholder="Descripción del alojamiento"
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        className="w-full p-2 mt-1 border border-gray-300 rounded"
+                    ></textarea>
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold">Servicios</label>
+                    <div className="grid mt-2 gap-2 grid-cols-2 sm:grid-cols-3">
+                        {Object.entries(serviciosConIconos).map(([key, { label, icon }]) => (
+                            <label key={key} className="border p-2 flex rounded-md gap-2 items-center cursor-pointer hover:bg-gray-100 transition">
+                                <input
+                                    type="checkbox"
+                                    checked={servicios[key]}
+                                    onChange={() => toggleServicio(key)}
+                                />
+                                {icon}
+                                <span>{label}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold">Información Extra</label>
+                    <textarea
+                        placeholder="Reglas de la casa, información adicional..."
+                        value={informacionExtra}
+                        onChange={(e) => setInformacionExtra(e.target.value)}
+                        className="w-full p-2 mt-1 border border-gray-300 rounded"
+                    ></textarea>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="mb-4">
+                        <label className="block text-lg font-semibold">Cantidad de Huéspedes</label>
+                        <input
+                            type="number"
+                            placeholder="Cantidad de huéspedes"
+                            value={cantidadHuespedes}
+                            onChange={(e) => setCantidadHuespedes(e.target.value)}
+                            className="w-full p-2 mt-1 border border-gray-300 rounded"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-lg font-semibold">Precio por Noche</label>
+                        <input
+                            type="number"
+                            placeholder="Precio por noche"
+                            value={precioPorNoche}
+                            onChange={(e) => setPrecioPorNoche(e.target.value)}
+                            className="w-full p-2 mt-1 border border-gray-300 rounded"
+                        />
+                    </div>
+                </div>
+
+                <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors">
+                    {editar ? "Guardar Cambios" : "Crear Alojamiento"}
+                </button>
+            </form>
+        </div>
+    );
+};
+
+export default PlaceFormPage;
