@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PlaceFormPage from "../components/PlaceFormPage";
 import { useContext, useEffect, useState } from "react";
 import userContext from "../components/userContext";
@@ -8,7 +8,6 @@ import CardAlojamiento from "../components/CardAlojamiento";
 const PlacesPage = () => {
     const { user } = useContext(userContext.userContext);
     const { action } = useParams();
-    const navegar = useNavigate();
     const [userAlojamientos, setUserAlojamientos] = useState([]);
 
     const cargarAlojamientosUser = async () => {
@@ -40,13 +39,15 @@ const PlacesPage = () => {
                         Agregar nuevo alojamiento
                     </Link>
                     
-                    {/* Desplazamiento horizontal para los alojamientos */}
-                    <div className="flex space-x-4 overflow-x-scroll py-4 mt-4 scrollbar-hide">
+                    {/* Carrusel horizontal */}
+                    <div className="flex space-x-4 overflow-x-scroll py-4 mt-4 scrollbar-hide snap-x snap-mandatory">
                         {userAlojamientos.length === 0 ? (
                             <h4 className="text-gray-700">No se encontraron alojamientos para este usuario</h4>
                         ) : (
                             userAlojamientos.map((alojamiento, index) => (
-                                <CardAlojamiento key={index} {...alojamiento} />
+                                <div key={index} className="snap-start">
+                                    <CardAlojamiento {...alojamiento} />
+                                </div>
                             ))
                         )}
                     </div>

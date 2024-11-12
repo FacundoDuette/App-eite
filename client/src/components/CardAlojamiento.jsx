@@ -7,9 +7,11 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
     const navegar = useNavigate();
 
     return (
-        <div className="w-64 bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 mx-2">
+        <div className="w-72 bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 mx-2 flex-shrink-0">
             {/* Imagen del alojamiento */}
-            <img src={fotos[0]} alt="Alojamiento" className="w-full h-40 object-cover" />
+            <div className="relative">
+                <img src={fotos[0]} alt="Alojamiento" className="w-full h-48 object-cover" />
+            </div>
             
             {/* Contenido de la tarjeta */}
             <div className="p-4">
