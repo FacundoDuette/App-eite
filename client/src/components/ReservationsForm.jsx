@@ -12,7 +12,7 @@ const ReservationsForm = () => {
 
     const { id } = useParams()
 
-    const [usuario, setUsuario] = useState('')
+    const [usuario, setUsuario] = useState(user?.id)
     const [alojamiento, setAlojamiento] = useState('')
     const [fechaInicio, setFechaInicio] = useState(dayjs())
     const [fechaFin, setFechaFin] = useState(dayjs())
@@ -39,7 +39,7 @@ const ReservationsForm = () => {
         //Crear validaciones...
         try {
             const response = await axios.post('/api/reserva', { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas })
-            console.log(response)
+            // console.log(response)
             navegar('/account/bookings')
         } catch (error) {
             console.log(error)
@@ -47,8 +47,8 @@ const ReservationsForm = () => {
     }
 
     useEffect(() => {
-        if (user && !cargado) {
-            // setUsuario(user._id);
+        if (!cargado) {
+            setUsuario(user._id);
             id && setAlojamiento(id)
             id && cargarAlojamiento()
         }

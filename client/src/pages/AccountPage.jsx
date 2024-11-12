@@ -3,7 +3,7 @@ import userContext from "../components/userContext";
 import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import PlacesPage from "./PlacesPage";
-import ReservationsForm from "./ReservationsForm";
+// import ReservationsForm from "./ReservationsForm";
 import ReservationsPage from "./ReservationsPage";
 // import Reservations from "./Reservations"
 
@@ -73,6 +73,9 @@ const AccountPage = () => {
                 <div className="text-center max-w-lg mx-auto">
                     <h3>Estás logeado como {user.nombre} {user.apellido}</h3>
                     <p>{user.email}</p>
+                    <img src={user.foto} alt="Foto de perfil" />
+                    <p>Teléfono: {user.contacto}</p>
+                    <p>Nacido el: {user.fechaDeNacimiento}</p>
                     <button onClick={logOut} className="primary max-w-sm mt-2">Logout</button>
                 </div>
             )}

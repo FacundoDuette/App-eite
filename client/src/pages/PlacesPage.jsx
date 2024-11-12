@@ -9,6 +9,7 @@ const PlacesPage = () => {
     const { user } = useContext(userContext.userContext);
     const { action } = useParams();
     const [userAlojamientos, setUserAlojamientos] = useState([]);
+    const [cargado, setCargado] = useState(false);
 
     const cargarAlojamientosUser = async () => {
         try {
@@ -20,8 +21,9 @@ const PlacesPage = () => {
     };
 
     useEffect(() => {
-        if (action !== 'new' && action !== 'edit') {
+        if (action !== 'new' && action !== 'edit' && !cargado) {
             cargarAlojamientosUser();
+            setCargado(true);
         }
     },);
 
