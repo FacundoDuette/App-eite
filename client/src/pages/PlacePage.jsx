@@ -22,8 +22,8 @@ const PlacePage = () => {
     }
 
     return (
-        <div className="flex justify-center bg-gray-100 py-8 px-4">
-            <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex justify-center py-8 px-4">
+            <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
                 {/* Título y Ubicación */}
                 <div className="p-6">
                     <h1 className="text-3xl font-semibold mb-2">{alojamiento.titulo}</h1>
