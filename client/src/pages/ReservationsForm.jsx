@@ -2,10 +2,16 @@ import axios from "axios"
 import { useState, useEffect, useContext } from "react"
 import userContext from "../components/userContext";
 import dayjs from "dayjs"
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const ReservationsForm = () => {
-    const { user, cargado } = useContext(userContext.userContext);
+    const { user } = useContext(userContext.userContext);
+
+    const navegar = useNavigate()
+
+    const { id } = useParams()
+
     const [usuario, setUsuario] = useState('')
     const [alojamiento, setAlojamiento] = useState('')
     const [fechaInicio, setFechaInicio] = useState(dayjs())
@@ -13,24 +19,41 @@ const ReservationsForm = () => {
     const [cantidadHuespedes, setCantidadHuespedes] = useState(1)
     const [notas, setNotas] = useState('')
 
+    const [cargado, setCargado] = useState(false)
+
+    const [mostrarAlojamiento, setMostrarAlojamiento] = useState({})
+
+    const cargarAlojamiento = async () => {
+        try {
+            const response = await axios.get(`/api/alojamiento/${id}`)
+            setMostrarAlojamiento(response.data)
+            console.log(response.data)
+            setCargado(true)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         //Crear validaciones...
-
-        setUsuario('671d805cebe38adf2f25b0fb')
-        setAlojamiento('672fd4508a1cf21173cb6f94')
-
         try {
             const response = await axios.post('/api/reserva', { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, notas })
             console.log(response)
         } catch (error) {
             console.log(error)
         }
-
     }
+
+    useEffect(() => {
+        // (user && cargado) && setUsuario(user._id)
+        // id && setAlojamiento(id)
+        // id && cargarAlojamiento()
+    })
 
     return (
         <>
+            <h1>Reservas</h1>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Fecha Inicio</label>

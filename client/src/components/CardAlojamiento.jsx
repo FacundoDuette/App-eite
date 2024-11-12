@@ -32,7 +32,7 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
           </div>
         </div>
         <p className="text-lg font-semibold mt-2">${precioPorNoche} /noche</p>
-        {usuarioId === (user?._id) ? <button onClick={() => navegar(`/account/places/edit/${_id}`)}>Editar</button> : <button /* onClick={() => navegar(`/account/places/edit/${_id}`)} */>Reservar</button>}
+        {usuarioId === (user?._id) ? <button onClick={() => navegar(`/account/places/edit/${_id}`)}>Editar</button> : <button onClick={() => navegar(`/place/${_id}`)}>Ver detalles</button>}
       </div>
     </div>
   )
