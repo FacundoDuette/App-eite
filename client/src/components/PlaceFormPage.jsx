@@ -153,17 +153,15 @@ const PlaceFormPage = () => {
         // Cambiamos la forma de enviar los datos al backend, dentro de un objeto data
         try {
             const response = await axios.patch(`/api/alojamiento/${id}`, {
-                data: {
-                    usuarioId,
-                    titulo,
-                    direccion,
-                    fotos,
-                    descripcion,
-                    servicios,
-                    informacionExtra,
-                    cantidadHuespedes,
-                    precioPorNoche
-                }
+                usuarioId,
+                titulo,
+                direccion,
+                fotos,
+                descripcion,
+                servicios,
+                informacionExtra,
+                cantidadHuespedes,
+                precioPorNoche
             });
             console.log(response.data);
             navigate('/account/places')
