@@ -8,7 +8,7 @@ export default function Header() {
 
     return (
         <>
-            <header className=' flex justify-around'>
+            <header className=' flex align-middle text-center justify-between'>
                 <Link to={'/'} className="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 h-6 -rotate-90">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
@@ -16,18 +16,9 @@ export default function Header() {
                     <span className='font-bold text-xl'>App-eite</span>
                     {/* <img src="../assets/Logo-App-Eite-DeCote.png" className="w-10" /> */}
                 </Link>
-                <div className='flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300'>
-                    <div>Cualquier lugar</div>
-                    <div className="border-l border-gray-300"></div>
-                    <div>Cualquier semana</div>
-                    <div className="border-l border-gray-300"></div>
-                    <div>Agregar personas</div>
-                    <button className='bg-primary text-white p-1 rounded-full'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
-                    </button>
-                </div>
+                <Link className="font-semibold text-gray-500 hover:text-black transition-colors duration-300" to={"/"}>
+                Alojamientos
+                </Link>
                 <Link to={!user ? '/login' : '/account'} className="flex items-center gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
