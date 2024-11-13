@@ -6,11 +6,10 @@ import axios from "axios";
 const PlaceFormPage = () => {
     const { user } = useContext(userContext.userContext);
     const usuarioId = user._id || '';
-    const { id } = useParams();
+    const { action, id } = useParams();
     const [cargado, setCargado] = useState(false);
-    const [editar, setEditar] = useState(false);
     const [check, setCheck] = useState(false);
-    // const [errores, setErrores] = useState([]);
+    const [errores, setErrores] = useState([]);
     const navegar = useNavigate();
 
     const [titulo, setTitulo] = useState('');
@@ -96,22 +95,18 @@ const PlaceFormPage = () => {
                 setCargado(true);
             }
         } catch (error) {
-            console.error(error);
-            setErrores(error.response.data);
+            console.log(error)
+            setErrores(error);
         }
     };
 
     useEffect(() => {
-        if (!user?._id) {
+        if (!user) {
             navigate('/login');
         }
-        if (id && !cargado) {
+        if (action === 'edit' && id && !cargado) {
             cargarDatos(id);
-            setEditar(true);
             setCargado(true);
-        }
-        if (!id) {
-            setCheck(true)
         }
     }, [id, cargado]);
 
@@ -136,22 +131,25 @@ const PlaceFormPage = () => {
             precioPorNoche
         };
         try {
-            const response = editar
-                ? await axios.patch(`/api/alojamiento/${id}`, data)
-                : await axios.post('/api/alojamiento', { data });
+            if (check) {
+                const response = action === 'edit'
+                    ? await axios.patch(`/api/alojamiento/${id}`, data)
+                    : await axios.post('/api/alojamiento', { data });
+            }
             navegar('/account/places');
         } catch (error) {
-            console.log(error.response.data);
+            setErrores(error.response.data.error.errors);
         }
     };
 
     const handleDelete = async () => {
-        try {
-            const response = editar ?
-                (await axios.delete(`/api/alojamiento/${id}`), navegar('/account/places')) :
-                setErrores({ ...errores, delete: 'No se pudo eliminar el alojamiento' });
-        } catch (error) {
-            console.log(error.response.data);
+        if (action === 'edit' && check) {
+            try {
+                await axios.delete(`/api/alojamiento/${id}`)
+                navegar('/account/places')
+            } catch (error) {
+                setErrores(error.response.data.error.errors);
+            }
         }
     }
 
@@ -162,8 +160,8 @@ const PlaceFormPage = () => {
     return (
         <div className="max-w-2xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg">
             <form onSubmit={handleSubmit}>
-                <h2 className="text-3xl font-bold mb-6 text-center">{editar ? "Editar Alojamiento" : "Agregar Alojamiento"}</h2>
-                {(editar == true) &&
+                <h2 className="text-3xl font-bold mb-6 text-center">{action === 'edit' ? "Editar Alojamiento" : "Agregar Alojamiento"}</h2>
+                {(action === 'edit') &&
                     <label
                         htmlFor="toggleFour"
                         className="flex items-center cursor-pointer select-none text-dark dark:text-white"
@@ -188,32 +186,34 @@ const PlaceFormPage = () => {
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Título</label>
                     <input
-                        disabled={!check}
+                        disabled={(action === 'edit' && !check)}
                         type="text"
                         placeholder="Título del alojamiento"
                         value={titulo}
                         onChange={(e) => setTitulo(e.target.value)}
-                        className="w-full p-2 mt-1 border border-gray-300 rounded"
+                        className='w-full p-2 mt-1 border border-gray-300 rounded'
                     />
+                    <p className="text-red-500 text-sm" hidden={errores?.titulo ? false : true}>{errores?.titulo?.message}</p>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Dirección</label>
                     <input
-                        disabled={!check}
+                        disabled={(action === 'edit' && !check)}
                         type="text"
                         placeholder="Dirección"
                         value={direccion}
                         onChange={(e) => setDireccion(e.target.value)}
                         className="w-full p-2 mt-1 border border-gray-300 rounded"
                     />
+                    <p className="text-red-500 text-sm" hidden={errores?.direccion ? false : true}>{errores?.direccion?.message}</p>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Fotos</label>
                     <div className="flex gap-2">
                         <input
-                            disabled={!check}
+                            disabled={(action === 'edit' && !check)}
                             type="text"
                             placeholder="Agregar link de imagen"
                             value={fotos}
@@ -222,17 +222,19 @@ const PlaceFormPage = () => {
                         />
                         <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Agregar</button>
                     </div>
+                    <p className="text-red-500 text-sm" hidden={errores?.fotos ? false : true}>{errores?.fotos?.message}</p>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Descripción</label>
                     <textarea
-                        disabled={!check}
+                        disabled={(action === 'edit' && !check)}
                         placeholder="Descripción del alojamiento"
                         value={descripcion}
                         onChange={(e) => setDescripcion(e.target.value)}
                         className="w-full p-2 mt-1 border border-gray-300 rounded"
                     ></textarea>
+                    <p className="text-red-500 text-sm" hidden={errores?.descripcion ? false : true}>{errores?.titulo?.message}</p>
                 </div>
 
                 <div className="mb-4">
@@ -241,7 +243,7 @@ const PlaceFormPage = () => {
                         {Object.entries(serviciosConIconos).map(([key, { label, icon }]) => (
                             <label key={key} className="border p-2 flex rounded-md gap-2 items-center cursor-pointer hover:bg-gray-100 transition">
                                 <input
-                                    disabled={!check}
+                                    disabled={(action === 'edit' && !check)}
                                     type="checkbox"
                                     checked={servicios[key]}
                                     onChange={() => toggleServicio(key)}
@@ -251,48 +253,52 @@ const PlaceFormPage = () => {
                             </label>
                         ))}
                     </div>
+                    <p className="text-red-500 text-sm" hidden={errores?.servicios ? false : true}>{errores?.servicios?.message}</p>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Información Extra</label>
                     <textarea
-                        disabled={!check}
+                        disabled={(action === 'edit' && !check)}
                         placeholder="Reglas de la casa, información adicional..."
                         value={informacionExtra}
                         onChange={(e) => setInformacionExtra(e.target.value)}
                         className="w-full p-2 mt-1 border border-gray-300 rounded"
                     ></textarea>
+                    <p className="text-red-500 text-sm" hidden={errores?.informacionExtra ? false : true}>{errores?.informacionExtra?.message}</p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="mb-4">
                         <label className="block text-lg font-semibold">Cantidad de Huéspedes</label>
                         <input
-                            disabled={!check}
+                            disabled={(action === 'edit' && !check)}
                             type="number"
                             placeholder="Cantidad de huéspedes"
                             value={cantidadHuespedes}
                             onChange={(e) => setCantidadHuespedes(e.target.value)}
                             className="w-full p-2 mt-1 border border-gray-300 rounded"
                         />
+                        <p className="text-red-500 text-sm" hidden={errores?.cantidadHuespedes ? false : true}>{errores?.cantidadHuespedes?.message}</p>
                     </div>
                     <div className="mb-4">
                         <label className="block text-lg font-semibold">Precio por Noche</label>
                         <input
-                            disabled={!check}
+                            disabled={(action === 'edit' && !check)}
                             type="number"
                             placeholder="Precio por noche"
                             value={precioPorNoche}
                             onChange={(e) => setPrecioPorNoche(e.target.value)}
                             className="w-full p-2 mt-1 border border-gray-300 rounded"
                         />
+                        <p className="text-red-500 text-sm" hidden={errores?.precioPorNoche ? false : true}>{errores?.precioPorNoche?.message}</p>
                     </div>
                 </div>
                 {
-                    ((user._id === usuarioId) && check == true) ? (<div className="w-full flex justify-center">
+                    ((user._id === usuarioId) && action === 'edit' && check == true) ? (<div className="w-full flex gap-4 justify-center">
                         <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors" type="submit">Guardar Cambios</button>
                         <button className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded mt-6 transition-colors" onClick={handleDelete}>Borrar Alojamiento</button>
-                    </div>) : editar ?
+                    </div>) : action === 'edit' ?
                         <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors" type="submit">Regresar</button> :
                         <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors" type="submit">Crear Alojamiento</button>
                 }

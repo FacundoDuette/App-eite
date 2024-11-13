@@ -16,18 +16,17 @@ const ReservationsPage = () => {
         try {
             const response = await axios.get(`/api/reserva/user/${user._id}`);
             setReservas(response.data.listaReservas);
-            setCargado(true);
         } catch (error) {
-            console.log(error.response?.data?.message || error.message);
+            console.log(error);
         }
     };
 
     useEffect(() => {
-        if ((action !== 'new' && action !== 'edit') && !cargado) {
+        if ((action !== 'new' && action !== 'edit' && !cargado)) {
             cargarReservas();
             setCargado(true);
         }
-    },);
+    });
 
     const calcularTotalEstadia = (fechaInicio, fechaFin, precio) => {
         const dias = dayjs(fechaFin).diff(dayjs(fechaInicio), "day");
@@ -35,7 +34,8 @@ const ReservationsPage = () => {
     };
 
     const handleEditClick = (reservaId) => {
-        navegar(`/place/edit/${reservaId}`);
+        setCargado(false)
+        navegar(`/account/bookings/edit/${reservaId}`);
     };
 
     return (

@@ -12,7 +12,6 @@ const userContextProvider = ({ children }) => {
         if (!user) {
             axios.get('/api/session/session').then(async ({ data }) => {
                 const userData = await axios.get(`/api/usuario/${data.id}`)
-                // console.log(userData.data)
                 setUser(userData.data)
             })
             setCargado(true)

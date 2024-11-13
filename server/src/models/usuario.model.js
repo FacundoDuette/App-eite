@@ -42,9 +42,9 @@ const usuario = new Schema({
             message: 'La fecha de nacimiento no es valida'
         }
     },
-    foto: {
-        type: String,
-    },
+    // foto: {
+    //     type: String,
+    // },
     contacto: {
         type: String,
         required: [false, 'El contacto es requerido'],

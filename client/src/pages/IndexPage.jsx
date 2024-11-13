@@ -20,12 +20,12 @@ export default function IndexPage() {
 
     useEffect(() => {
         !cargado && cargarAlojamientos()
-    })
+    }, [cargado])
 
     return (
         <div>
-            <h1>Alojamientos</h1>
-            <div className="flex space-x-4 pb-4 mt-4 overflow-x-scroll">
+            <h1 className="text-4xl font-bold text-center mt-4">Alojamientos</h1>
+            <div className="flex flex-wrap space-x-4 pb-4 gap-4 mt-4 justify-center">
                 {
                     alojamientos?.map((alojamiento, index) => {
                         return (

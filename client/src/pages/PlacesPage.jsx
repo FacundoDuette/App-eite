@@ -21,7 +21,7 @@ const PlacesPage = () => {
     };
 
     useEffect(() => {
-        if (action !== 'new' && action !== 'edit') {
+        if (action !== 'new' && action !== 'edit' && !cargado) {
             cargarAlojamientosUser();
             setCargado(true);
         }
@@ -42,12 +42,12 @@ const PlacesPage = () => {
                     </Link>
 
                     {/* Carrusel horizontal */}
-                    <div className="flex space-x-4 overflow-x-scroll py-4 mt-4 scrollbar-hide snap-x snap-mandatory">
+                    <div className="flex flex-wrap space-x-4 pb-4 gap-4 mt-4 justify-center">
                         {userAlojamientos.length === 0 ? (
                             <h4 className="text-gray-700">No se encontraron alojamientos para este usuario</h4>
                         ) : (
                             userAlojamientos.map((alojamiento, index) => (
-                                <div key={index} className="snap-start">
+                                <div key={index} className="snap-start" onClick={() => setCargado(false)} >
                                     <CardAlojamiento {...alojamiento} />
                                 </div>
                             ))

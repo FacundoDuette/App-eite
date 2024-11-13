@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const RegisterPage = () => {
     const [nombre, setNombre] = useState('');
@@ -8,8 +9,8 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [confirmContrasena, setConfirmContrasena] = useState('');
-    const [fechaDeNacimiento, setFechaDeNacimiento] = useState('');
-    const [foto, setFoto] = useState('');
+    const [fechaDeNacimiento, setFechaDeNacimiento] = useState(dayjs().format('YYYY-MM-DD'));
+    // const [foto, setFoto] = useState('');
     const [contacto, setContacto] = useState('');
 
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const RegisterPage = () => {
                     apellido,
                     email,
                     fechaDeNacimiento,
-                    foto,
+                    // foto,
                     contacto
                 },
                 contrasena,
@@ -72,18 +73,18 @@ const RegisterPage = () => {
                     />
                     <input
                         type="date"
-                        placeholder="Fecha de nacimiento"
-                        value={fechaDeNacimiento}
-                        onChange={e => setFechaDeNacimiento(e.target.value)}
+                        // placeholder="Fecha de nacimiento"
+                        value={dayjs(fechaDeNacimiento).format('YYYY-MM-DD') || dayjs().format('YYYY-MM-DD')}
+                        onChange={e => setFechaDeNacimiento(dayjs(e.target.value).format('YYYY-MM-DD'))}
                     />
-                    <input
+                    {/* <input
                         type="text"
                         placeholder="Enlace a la foto de perfil..."
                         value={foto}
                         onChange={e => setFoto(e.target.value)}
-                    />
+                    /> */}
                     <input
-                        type="tel"
+                        type="number"
                         placeholder="Número de contacto..."
                         value={contacto}
                         onChange={e => setContacto(e.target.value)}

@@ -149,33 +149,10 @@ const getFechasReservadasByIdAlojamiento = async (req, res) => {
 const updateReserva = async (req, res) => {
     try {
         const { id } = req.params;
-        const { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body;
-
-        //Verificación si el usuario existe
-        if (usuario == "" || usuario == undefined || usuario == null) {
-            return res.status(400).json({ message: 'El usuario es requerido' });
-        }
-        const userId = await usuarios.findById(usuario);
-        if (!userId) {
-            return res.status(400).json({ message: 'El usuario no existe' });
-        }
-
-        //Verificación si el alojamiento existe
-        if (alojamiento == "" || alojamiento == undefined || alojamiento == null) {
-            return res.status(400).json({ message: 'El alojamiento es requerido' });
-        }
-        const hostId = await alojamientos.findById(alojamiento);
-        if (!hostId) {
-            return res.status(400).json({ message: 'El alojamiento no existe' });
-        }
-
-        //Verificación de cantidadHuespedes disponibles
-        if (cantidadHuespedes > hostId.detalles.cantidadPersonas) {
-            return res.status(400).json({ message: 'La cantidad de huespedes supera la capacidad del alojamiento' });
-        }
+        const { fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas } = req.body; //Se extraen los datos del body
 
         //Se procede a intentar la actualización
-        const reserva = await reservas.findByIdAndUpdate(id, { usuario, alojamiento, fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas }, { new: true, runValidators: true });
+        const reserva = await reservas.findByIdAndUpdate(id, { fechaInicio, fechaFin, cantidadHuespedes, precio, descripcion, notas }, { new: true, runValidators: true });
         if (!reserva) {
             return res.status(404).json({ message: 'No se encontró la reserva' })
         }

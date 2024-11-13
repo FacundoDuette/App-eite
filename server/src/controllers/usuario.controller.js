@@ -35,7 +35,7 @@ const agregarUsuario = async (req, res) => {
     const nuevoUsuario = await usuario.save();
     res.status(201).json(nuevoUsuario);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error });
   }
 };
 
@@ -44,7 +44,7 @@ const obtenerTodosLosUsuarios = async (req, res) => {
     const lista = await usuarios.find();
     res.json(lista);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error });
   }
 };
 
@@ -58,7 +58,7 @@ const obtenerPorId = async (req, res) => {
       res.status(404).send("Usuario no encontrado");
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error });
   }
 };
 
@@ -72,7 +72,7 @@ const borrarPorId = async (req, res) => {
       res.status(404).send("Usuario no encontrado");
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error });
   }
 };
 
@@ -94,7 +94,7 @@ const modificarUsuario = async (req, res) => {
       res.status(404).send("Usuario no encontrado");
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error });
   }
 };
 

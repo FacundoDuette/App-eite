@@ -6,7 +6,7 @@ const obtenerTodosLosAlojamientos = async (req, res) => {
         const lista = await alojamientos.find();
         res.json(lista);
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ error });
     }
 };
 
@@ -17,10 +17,10 @@ const obtenerPorId = async (req, res) => {
         if (alojamiento) {
             res.json(alojamiento);
         } else {
-            res.status(404).json({ mensaje: 'Alojamiento no encontrado' });
+            res.status(404).json({ message: 'Alojamiento no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ error });
     }
 
 };
@@ -29,20 +29,20 @@ const obtenerPorUserId = async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {
-            res.status(400).json({ mensaje: 'El Usuario es requerido' });
+            res.status(400).json({ message: 'El Usuario es requerido' });
         }
         const existe = await usuarios.findById(id);
         if (!existe) {
-            res.status(404).json({ mensaje: 'Usuario no encontrado' });
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }
         const lista = await alojamientos.find({ usuarioId: id });
         if (lista.length) {
             res.json(lista);
         } else {
-            res.status(404).json({ mensaje: 'No hay alojamientos para este usuario' });
+            res.status(404).json({ message: 'No hay alojamientos para este usuario' });
         }
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ error });
     }
 }
 
@@ -53,10 +53,10 @@ const borrarPorId = async (req, res) => {
         if (alojamiento) {
             res.json(alojamiento);
         } else {
-            res.status(404).json({ mensaje: 'Alojamiento no encontrado' });
+            res.status(404).json({ message: 'Alojamiento no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ error });
     }
 
 };
@@ -69,10 +69,10 @@ const modificarAlojamiento = async (req, res) => {
         if (alojamiento) {
             res.json(alojamiento);
         } else {
-            res.status(404).json({ mensaje: 'Alojamiento no encontrado' });
+            res.status(404).json({ message: 'Alojamiento no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ error });
     }
 };
 
@@ -83,7 +83,7 @@ const agregarAlojamiento = async (req, res) => {
         await alojamiento.save();
         res.status(201).json(alojamiento);
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ error });
     }
 };
 
