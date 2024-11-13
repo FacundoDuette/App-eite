@@ -19,6 +19,9 @@ router.get('/user/:id',/* authenticate, */ reservaController.getReservaByusuario
 //Obtener reservas por id de alojamiento
 router.get('/host/:id',/* authenticate, */ reservaController.getReservaByalojamiento);
 
+//Obtener fechas reservadas por id de alojamiento
+router.get('/fechas-reservadas/:id',/* authenticate, */ reservaController.getFechasReservadasByIdAlojamiento)
+
 //Modificar reserva
 router.patch('/:id',/* authenticate, */ reservaController.updateReserva)
 

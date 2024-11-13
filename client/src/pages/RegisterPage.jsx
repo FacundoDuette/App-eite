@@ -16,7 +16,7 @@ const RegisterPage = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log(nombre, apellido, email, contrasena, fechaDeNacimiento, foto, contacto);
+        // console.log(nombre, apellido, email, contrasena, fechaDeNacimiento, foto, contacto);
         // Enviar los datos con la estructura `data` dentro del objeto
         const respuesta = await axios.post('/api/usuario', {
             data: {
@@ -32,7 +32,6 @@ const RegisterPage = () => {
                 confirmContrasena
             }
         });
-        console.log(respuesta.data);
         navigate('/login');
     }
 

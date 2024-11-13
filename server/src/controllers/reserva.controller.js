@@ -127,6 +127,25 @@ const getReservaByalojamiento = async (req, res) => {
     }
 }
 
+//Obtener fechas reservadas de un alojamiento
+const getFechasReservadasByIdAlojamiento = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ message: 'El id del alojamiento es obligatorio' });
+        }
+        const listaReservas = await reservas.find({ alojamiento: id });
+        if (listaReservas.length === 0) {
+            return res.status(404).json({ message: 'No se encontró ninguna reserva para este alojamiento' })
+        }
+        return res.status(200).json({ listaReservas })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error })
+        return;
+    }
+}
+
 const updateReserva = async (req, res) => {
     try {
         const { id } = req.params;
@@ -210,6 +229,7 @@ export default {
     getReservaById,
     getReservaByusuario,
     getReservaByalojamiento,
+    getFechasReservadasByIdAlojamiento,
     updateReserva,
     deleteReserva,
     obtenerFechasReservadas

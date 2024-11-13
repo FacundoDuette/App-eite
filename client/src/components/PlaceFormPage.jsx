@@ -5,12 +5,13 @@ import axios from "axios";
 
 const PlaceFormPage = () => {
     const { user } = useContext(userContext.userContext);
-    const usuarioId = user._id;
-    const { action, id } = useParams();
+    const usuarioId = user._id || '';
+    const { id } = useParams();
     const [cargado, setCargado] = useState(false);
     const [editar, setEditar] = useState(false);
-    const [errores, setErrores] = useState([]);
-    const navigate = useNavigate();
+    const [check, setCheck] = useState(false);
+    // const [errores, setErrores] = useState([]);
+    const navegar = useNavigate();
 
     const [titulo, setTitulo] = useState('');
     const [direccion, setDireccion] = useState('');
@@ -101,10 +102,16 @@ const PlaceFormPage = () => {
     };
 
     useEffect(() => {
+        if (!user?._id) {
+            navigate('/login');
+        }
         if (id && !cargado) {
             cargarDatos(id);
             setEditar(true);
             setCargado(true);
+        }
+        if (!id) {
+            setCheck(true)
         }
     }, [id, cargado]);
 
@@ -132,21 +139,56 @@ const PlaceFormPage = () => {
             const response = editar
                 ? await axios.patch(`/api/alojamiento/${id}`, data)
                 : await axios.post('/api/alojamiento', { data });
-            console.log(response.data);
-            navigate('/account/places');
+            navegar('/account/places');
         } catch (error) {
             console.log(error.response.data);
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            const response = editar ?
+                (await axios.delete(`/api/alojamiento/${id}`), navegar('/account/places')) :
+                setErrores({ ...errores, delete: 'No se pudo eliminar el alojamiento' });
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+
+    const handleCheckboxChange = () => {
+        setCheck(!check)
+    }
+
     return (
         <div className="max-w-2xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg">
             <form onSubmit={handleSubmit}>
                 <h2 className="text-3xl font-bold mb-6 text-center">{editar ? "Editar Alojamiento" : "Agregar Alojamiento"}</h2>
-
+                {(editar == true) &&
+                    <label
+                        htmlFor="toggleFour"
+                        className="flex items-center cursor-pointer select-none text-dark dark:text-white"
+                    >
+                        <div className="relative">
+                            <input
+                                type="checkbox"
+                                id="toggleFour"
+                                className="peer sr-only"
+                                value={check}
+                                onChange={handleCheckboxChange}
+                            />
+                            <div
+                                className="block h-8 rounded-full box bg-dark dark:bg-dark-2 w-14 peer-checked:bg-primary"
+                            ></div>
+                            <div
+                                className="absolute flex items-center justify-center w-6 h-6 transition bg-white rounded-full dot left-1 top-1 dark:bg-dark-5 peer-checked:translate-x-full peer-checked:dark:bg-white"
+                            ></div>
+                        </div>
+                    </label>
+                }
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Título</label>
                     <input
+                        disabled={!check}
                         type="text"
                         placeholder="Título del alojamiento"
                         value={titulo}
@@ -158,6 +200,7 @@ const PlaceFormPage = () => {
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Dirección</label>
                     <input
+                        disabled={!check}
                         type="text"
                         placeholder="Dirección"
                         value={direccion}
@@ -170,6 +213,7 @@ const PlaceFormPage = () => {
                     <label className="block text-lg font-semibold">Fotos</label>
                     <div className="flex gap-2">
                         <input
+                            disabled={!check}
                             type="text"
                             placeholder="Agregar link de imagen"
                             value={fotos}
@@ -183,6 +227,7 @@ const PlaceFormPage = () => {
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Descripción</label>
                     <textarea
+                        disabled={!check}
                         placeholder="Descripción del alojamiento"
                         value={descripcion}
                         onChange={(e) => setDescripcion(e.target.value)}
@@ -196,6 +241,7 @@ const PlaceFormPage = () => {
                         {Object.entries(serviciosConIconos).map(([key, { label, icon }]) => (
                             <label key={key} className="border p-2 flex rounded-md gap-2 items-center cursor-pointer hover:bg-gray-100 transition">
                                 <input
+                                    disabled={!check}
                                     type="checkbox"
                                     checked={servicios[key]}
                                     onChange={() => toggleServicio(key)}
@@ -210,6 +256,7 @@ const PlaceFormPage = () => {
                 <div className="mb-4">
                     <label className="block text-lg font-semibold">Información Extra</label>
                     <textarea
+                        disabled={!check}
                         placeholder="Reglas de la casa, información adicional..."
                         value={informacionExtra}
                         onChange={(e) => setInformacionExtra(e.target.value)}
@@ -221,6 +268,7 @@ const PlaceFormPage = () => {
                     <div className="mb-4">
                         <label className="block text-lg font-semibold">Cantidad de Huéspedes</label>
                         <input
+                            disabled={!check}
                             type="number"
                             placeholder="Cantidad de huéspedes"
                             value={cantidadHuespedes}
@@ -231,6 +279,7 @@ const PlaceFormPage = () => {
                     <div className="mb-4">
                         <label className="block text-lg font-semibold">Precio por Noche</label>
                         <input
+                            disabled={!check}
                             type="number"
                             placeholder="Precio por noche"
                             value={precioPorNoche}
@@ -239,10 +288,14 @@ const PlaceFormPage = () => {
                         />
                     </div>
                 </div>
-
-                <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors">
-                    {editar ? "Guardar Cambios" : "Crear Alojamiento"}
-                </button>
+                {
+                    ((user._id === usuarioId) && check == true) ? (<div className="w-full flex justify-center">
+                        <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors" type="submit">Guardar Cambios</button>
+                        <button className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded mt-6 transition-colors" onClick={handleDelete}>Borrar Alojamiento</button>
+                    </div>) : editar ?
+                        <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors" type="submit">Regresar</button> :
+                        <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded mt-6 transition-colors" type="submit">Crear Alojamiento</button>
+                }
             </form>
         </div>
     );

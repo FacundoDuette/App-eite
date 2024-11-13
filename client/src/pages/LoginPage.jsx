@@ -16,7 +16,7 @@ const LoginPage = () => {
         try {
             const response = await axios.post('/api/session/login', { email, contrasena });
             const data = response.data.user;
-            console.log(data);
+            // console.log(data);
             const setter = setUser(data)
             await Promise.resolve(setter).then(() => {
                 navigate('/')

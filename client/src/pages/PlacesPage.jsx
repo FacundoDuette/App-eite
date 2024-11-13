@@ -21,11 +21,11 @@ const PlacesPage = () => {
     };
 
     useEffect(() => {
-        if (action !== 'new' && action !== 'edit' && !cargado) {
+        if (action !== 'new' && action !== 'edit') {
             cargarAlojamientosUser();
             setCargado(true);
         }
-    },);
+    });
 
     return (
         <div className="px-6 py-4">

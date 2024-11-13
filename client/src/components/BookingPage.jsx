@@ -6,10 +6,10 @@ import isBetween from "dayjs/plugin/isBetween";
 import { useNavigate, useParams } from "react-router-dom";
 dayjs.extend(isBetween);
 
-const PlacePage = () => {
+const BookingPage = () => {
     const { user } = useContext(userContext.userContext);
     const navegar = useNavigate();
-    const { id } = useParams();
+    const { action, id } = useParams();
 
     const [alojamiento, setAlojamiento] = useState(null);
     const [fechaInicio, setFechaInicio] = useState(dayjs().format("YYYY-MM-DD"));
@@ -71,27 +71,34 @@ const PlacePage = () => {
                 fechaFin,
                 cantidadHuespedes
             });
-            console.log("Reserva confirmada");
+            navegar('/account/bookings')
         } catch (error) {
             console.log(error);
         }
     };
 
     useEffect(() => {
-        if (id) {
+        if (action === 'new' && id) {
             cargarAlojamiento();
             cargarFechasReservadas();
         }
-        
+
     }, [id]);
 
     useEffect(() => {
         if (fechaInicio && fechaFin && alojamiento) {
-            calcularTotal();
+            handleSetFechas(fechaInicio, fechaFin);
         }
     }, [fechaInicio, fechaFin, alojamiento]);
 
     if (!alojamiento) return '';
+
+    const handleSetFechas = (fechaInicio, fechaFin) => {
+        if (fechaFin < fechaInicio) {
+            setFechaFin(fechaInicio);
+        }
+        calcularTotal();
+    }
 
     return (
         <div className="flex justify-center py-8 px-4">
@@ -99,7 +106,7 @@ const PlacePage = () => {
                 {/* Título y Ubicación */}
                 <div className="p-6">
                     <h1 className="text-3xl font-semibold mb-2">{alojamiento.titulo}</h1>
-                    <a 
+                    <a
                         className="text-blue-600 underline hover:text-blue-800"
                         href={`https://maps.google.com/?q=${alojamiento.direccion}`}
                         target="_blank"
@@ -131,24 +138,24 @@ const PlacePage = () => {
                                 {/* Fecha de Inicio */}
                                 <div>
                                     <label className="text-gray-700 text-sm">Check-in</label>
-                                    <input 
-                                        type="date" 
+                                    <input
+                                        type="date"
                                         value={fechaInicio}
                                         onChange={(e) => setFechaInicio(e.target.value)}
                                         className="w-full border-b border-gray-300 focus:outline-none focus:border-black p-1 text-sm"
-                                        disabled={isDateDisabled(fechaInicio)}
+                                    // disabled={isDateDisabled(fechaInicio)}
                                     />
                                 </div>
 
                                 {/* Fecha de Fin */}
                                 <div>
                                     <label className="text-gray-700 text-sm">Check-out</label>
-                                    <input 
-                                        type="date" 
+                                    <input
+                                        type="date"
                                         value={fechaFin}
                                         onChange={(e) => setFechaFin(e.target.value)}
                                         className="w-full border-b border-gray-300 focus:outline-none focus:border-black p-1 text-sm"
-                                        disabled={isDateDisabled(fechaFin)}
+                                    // disabled={isDateDisabled(fechaFin)}
                                     />
                                 </div>
                             </div>
@@ -156,12 +163,12 @@ const PlacePage = () => {
                             {/* Cantidad de Huéspedes */}
                             <div>
                                 <label className="text-gray-700 text-sm">Huéspedes</label>
-                                <input 
-                                    type="number" 
+                                <input
+                                    type="number"
                                     min="1"
                                     max={alojamiento.cantidadHuespedes}
-                                    value={cantidadHuespedes} 
-                                    onChange={handleCantidadHuespedes} 
+                                    value={cantidadHuespedes}
+                                    onChange={handleCantidadHuespedes}
                                     className="w-full border-b border-gray-300 focus:outline-none focus:border-black p-1 text-sm"
                                 />
                             </div>
@@ -182,6 +189,8 @@ const PlacePage = () => {
                     <h2 className="text-2xl font-semibold mb-4">Descripción</h2>
                     <p className="text-gray-700 leading-relaxed mb-6">{alojamiento.descripcion}</p>
 
+                    <h3 className="text-2xl font-semibold mb-4">Cantidad de Huespedes: {alojamiento.cantidadHuespedes}</h3>
+
                     <h2 className="text-2xl font-semibold mb-4">Servicios</h2>
                     <ul className="grid grid-cols-2 gap-2 text-gray-700 mb-6">
                         {alojamiento.servicios?.wifi && <li>✅ Wifi</li>}
@@ -201,4 +210,4 @@ const PlacePage = () => {
     );
 };
 
-export default PlacePage;
+export default BookingPage;

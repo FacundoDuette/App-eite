@@ -3,6 +3,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import userContext from "../components/userContext";
+import BookingPage from "../components/BookingPage";
 
 const ReservationsPage = () => {
     const { user } = useContext(userContext.userContext);
@@ -22,10 +23,11 @@ const ReservationsPage = () => {
     };
 
     useEffect(() => {
-        if (!cargado) {
+        if ((action !== 'new' && action !== 'edit') && !cargado) {
             cargarReservas();
+            setCargado(true);
         }
-    }, [cargado]);
+    },);
 
     const calcularTotalEstadia = (fechaInicio, fechaFin, precio) => {
         const dias = dayjs(fechaFin).diff(dayjs(fechaInicio), "day");
@@ -38,9 +40,9 @@ const ReservationsPage = () => {
 
     return (
         <div className="p-8">
-            {action !== 'new' && (
+            {(action !== 'new' && action !== 'edit') && (
                 <div className="text-center mb-8">
-                    <Link 
+                    <Link
                         className="inline-flex gap-1 bg-blue-600 text-white py-2 px-6 rounded-full"
                         to={'/'}
                     >
@@ -51,7 +53,7 @@ const ReservationsPage = () => {
                     </Link>
                 </div>
             )}
-            {reservas.length ? (
+            {((action !== 'new' && action !== 'edit') && (reservas.length !== 0)) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {reservas.map((reserva, index) => {
                         const totalEstadia = calcularTotalEstadia(reserva.fechaInicio, reserva.fechaFin, reserva.precio);
@@ -64,7 +66,7 @@ const ReservationsPage = () => {
                                         {dayjs(reserva.fechaInicio).format('DD/MM/YYYY')} - {dayjs(reserva.fechaFin).format('DD/MM/YYYY')}
                                     </h4>
                                     <p className="text-gray-700 mb-4">
-                                        Huéspedes: {reserva.cantidadHuespedes}
+                                        Huéspedes: {reserva.cantidadHuespedes} de {reserva.alojamiento.cantidadHuespedes}
                                     </p>
                                     <p className="text-gray-700 mb-4">
                                         Precio por noche: ${reserva.precio}
@@ -75,7 +77,7 @@ const ReservationsPage = () => {
                                 </div>
                                 <p className="text-gray-600 mt-4">{reserva.notas || "Sin notas adicionales"}</p>
                                 {/* Botón de Editar */}
-                                <button 
+                                <button
                                     className="mt-4 bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition-colors"
                                     onClick={() => handleEditClick(reserva._id)}
                                 >
@@ -85,9 +87,9 @@ const ReservationsPage = () => {
                         );
                     })}
                 </div>
-            ) : (
-                <h3 className="text-center text-xl text-gray-500">No hay reservas registradas para este usuario</h3>
             )}
+            {action === 'new' && <BookingPage />}
+            {action === 'edit' && <BookingPage />}
         </div>
     );
 };

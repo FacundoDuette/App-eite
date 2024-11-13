@@ -12,7 +12,7 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
             <div className="relative">
                 <img src={fotos[0]} alt="Alojamiento" className="w-full h-48 object-cover" />
             </div>
-            
+
             {/* Contenido de la tarjeta */}
             <div className="p-4">
                 {/* Dirección y capacidad */}
@@ -20,7 +20,7 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
                     <span className="text-sm font-semibold text-gray-800 truncate">{direccion}</span>
                     <span className="text-xs text-gray-500">Cap: {cantidadHuespedes}</span>
                 </div>
-                
+
                 {/* Descripción */}
                 <p className="text-gray-600 text-sm truncate mb-2">Des: {descripcion}</p>
 
@@ -38,15 +38,15 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
                 <div className="flex items-center justify-between mt-4">
                     <p className="text-lg font-semibold text-gray-800">${precioPorNoche} / noche</p>
                     {usuarioId === (user?._id) ? (
-                        <button 
+                        <button
                             onClick={() => navegar(`/account/places/edit/${_id}`)}
                             className="text-blue-500 text-sm hover:underline"
                         >
                             Editar
                         </button>
                     ) : (
-                        <button 
-                            onClick={() => navegar(`/place/${_id}`)}
+                        <button
+                            onClick={() => navegar(`account/bookings/new/${_id}`)}
                             className="text-blue-500 text-sm hover:underline"
                         >
                             Ver detalles
