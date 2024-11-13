@@ -1,35 +1,26 @@
 import usuarios from "../models/usuario.model.js";
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 
-const encriptar = async (contrasena) => {
-  // Hashea la contraseña
-  const contraseñaHasheada = await bcrypt.hash(contrasena, 10);
-  return contraseñaHasheada;
-}
+// const encriptar = async (contrasena) => {
+//   // Hashea la contraseña
+//   const contraseñaHasheada = await bcrypt.hash(contrasena, 10);
+//   return contraseñaHasheada;
+// }
 
 const agregarUsuario = async (req, res) => {
   try {
     //cambiamos la forma de acceder a los datos, sacamos los ... de datosUsuario y  le agregamos .data al final de req.body
-    const { contrasena, confirmContrasena, datosUsuario } = req.body.data;
+    const { datosUsuario } = req.body;
 
-    //Verificamos si hay o no un usuario con el mismo email
-    const usuarioExistente = await usuarios.findOne({ email: datosUsuario.email });
-    if (usuarioExistente) {
-      return res.status(400).json({ message: "El email ya está en uso" });
-    }
-
-    // Verifica que haya una contraseña
-    if (!contrasena) {
-      return res.status(400).json({ message: "La contraseña es requerida" });
-    }
-
-    if (contrasena !== confirmContrasena) {
-      return res.status(400).json({ message: "Las contraseñas no coinciden" });
-    }
+    // if (contrasena !== confirmContrasena) {
+    //   return res.status(400).json({
+    //     error: { errors: { contrasena: { message: "Las contraseñas no coinciden" } } }
+    //   });
+    // }
 
     //faltaba "await" para esperar a que se encripte la contrasena
-    const encriptado = await encriptar(contrasena);
-    const usuario = new usuarios({ ...datosUsuario, contrasena: encriptado });
+    // const encriptado = await encriptar(contrasena);
+    const usuario = new usuarios({ ...datosUsuario });
 
     // Guarda el usuario en la base de datos
     const nuevoUsuario = await usuario.save();

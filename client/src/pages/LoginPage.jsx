@@ -8,6 +8,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [contrasena, setContrasena] = useState('');
     const navigate = useNavigate();
+    const [errores, setErrores] = useState([])
 
     const { setUser } = useContext(userContext.userContext)
 
@@ -22,7 +23,9 @@ const LoginPage = () => {
                 navigate('/')
             });
         } catch (error) {
+            setErrores(error.response.data.errors)
             console.error(error);
+            console.error(error.response.data.errors);
         }
     }
 
@@ -38,12 +41,14 @@ const LoginPage = () => {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
+                    <p className="text-red-500 text-sm" hidden={errores?.email ? false : true}>{errores?.email?.message}</p>
                     <input
                         type="password"
                         placeholder="Escriba su contraseña..."
                         value={contrasena}
                         onChange={e => setContrasena(e.target.value)}
                     />
+                    <p className="text-red-500 text-sm" hidden={errores?.contrasena ? false : true}>{errores?.contrasena?.message}</p>
                     <button type="Submit" className="primary">Login</button>
                     <div className="text-center py-2 text-gray-500">
                         Aún no estás registrado? <Link className="underline text-black"

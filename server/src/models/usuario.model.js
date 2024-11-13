@@ -1,7 +1,8 @@
 import { model, Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 
-const usuario = new Schema({
+const usuarioSchema = new Schema({
     nombre: {
         type: String,
         required: [true, 'El nombre es requerido'],
@@ -17,7 +18,7 @@ const usuario = new Schema({
     email: {
         type: String,
         required: [true, 'El email es requerido'],
-        unique: true,
+        unique: [true, 'El email ya existe'],
         validate: {
             validator: function (value) {
                 const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,7 +38,7 @@ const usuario = new Schema({
         required: [false, 'La fecha de nacimiento es requerida'],
         validate: {
             validator: function (value) {
-                return value <= new Date();
+                return value < new Date();
             },
             message: 'La fecha de nacimiento no es valida'
         }
@@ -58,5 +59,42 @@ const usuario = new Schema({
     }
 }, { timestamps: true });
 
-const usuarios = model('Usuarios', usuario);
+
+
+//VALIDACIONES DE CONTRASEÑA Y CONFIRMACIÓN DE CONTRASEÑA
+usuarioSchema.virtual('confirmContrasena')
+    .get(function () {
+        return this._confirmPassword;
+    })
+    .set(function (value) {
+        this._confirmContrasena = value;
+    });
+
+
+usuarioSchema.pre('validate', function (next) {
+    if (this.contrasena !== this.confirmContrasena) {
+        this.invalidate('confirmContrasena', '¡Las contraseñas no coinciden!');
+    }
+    next();
+});
+
+//ENCRYPTACIÓN DE CONTRASEÑA
+usuarioSchema.pre('save', function (next) {
+    //Si la contraseña es modificada, la encriptamos
+    if (this.isModified('contrasena')) {
+        try {
+            const salt = bcrypt.genSaltSync(10);    //Genera un salt para encriptar la contraseña
+            const hash = bcrypt.hashSync(this.contrasena, salt); //Encripta la contraseña
+            this.contrasena = hash;   //Asigna la contraseña encriptada al campo password
+            next(); //Continua con el proceso
+        } catch (error) {
+            next(error);    //Si hay un error, lo enviamos al siguiente middleware
+        }
+    }
+    else {
+        next(); //Si no hay cambios en la contraseña, continuamos con el proceso
+    }
+});
+
+const usuarios = model('Usuarios', usuarioSchema);
 export default usuarios;

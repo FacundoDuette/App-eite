@@ -43,7 +43,7 @@ export default function IndexPage() {
                     </svg>
                 </button>
             </div>
-            <div className="flex flex-wrap gap-2 space-x-4 pb-4 mt-4">
+            <div className="flex flex-wrap gap-3 pb-4 mt-4 justify-center">
                 {
                     alojamientos?.map((alojamiento, index) => {
                         return (
