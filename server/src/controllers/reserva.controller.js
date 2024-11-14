@@ -98,7 +98,7 @@ const getReservaById = async (req, res) => {
 const getReservaByusuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const listaReservas = await reservas.find({ usuario: id }).populate('alojamiento', 'titulo direccion'); // Incluye título y dirección
+        const listaReservas = await reservas.find({ usuario: id }).populate('alojamiento', 'titulo fotos direccion'); // Incluye título y dirección
 
         if (listaReservas.length === 0) {
             return res.status(404).json({ message: 'No se encontró ninguna reserva para este usuario' });

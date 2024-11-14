@@ -43,7 +43,8 @@ const PlacesPage = () => {
                     </Link>
 
                     {/* Carrusel horizontal */}
-                    <div className="flex flex-wrap pb-4 gap-3 mt-4 justify-center">
+                    
+                    <div className="flex flex-wrap gap-3 pb-4 mt-4 justify-center">
                         {userAlojamientos?.length === 0 ? (
                             <h4 className="text-gray-700">{error}</h4>
                         ) : (
