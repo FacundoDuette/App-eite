@@ -131,11 +131,9 @@ const PlaceFormPage = () => {
             precioPorNoche
         };
         try {
-            if (check) {
-                const response = action === 'edit'
-                    ? await axios.patch(`/api/alojamiento/${id}`, data)
-                    : await axios.post('/api/alojamiento', { data });
-            }
+            const response = (action === 'edit')
+                ? await axios.patch(`/api/alojamiento/${id}`, data)
+                : await axios.post('/api/alojamiento', { data });
             navegar('/account/places');
         } catch (error) {
             setErrores(error.response.data.error.errors);
@@ -234,7 +232,7 @@ const PlaceFormPage = () => {
                         onChange={(e) => setDescripcion(e.target.value)}
                         className="w-full p-2 mt-1 border border-gray-300 rounded"
                     ></textarea>
-                    <p className="text-red-500 text-sm" hidden={errores?.descripcion ? false : true}>{errores?.titulo?.message}</p>
+                    <p className="text-red-500 text-sm" hidden={errores?.descripcion ? false : true}>{errores?.descripcion?.message}</p>
                 </div>
 
                 <div className="mb-4">

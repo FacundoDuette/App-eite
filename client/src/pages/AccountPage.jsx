@@ -45,6 +45,15 @@ const AccountPage = () => {
     if (redireccion) {
         return <Navigate to={redireccion} />
     }
+
+    // Obtener iniciales del nombre y apellido
+    const getInitials = () => {
+        if (user?.nombre && user?.apellido) {
+            return `${user.nombre[0]}${user.apellido[0]}`.toUpperCase();
+        }
+        return '';
+    };
+
     return (
         <div>
             <nav className="w-full flex justify-center mt-4 gap-2 mb-12">
@@ -72,11 +81,10 @@ const AccountPage = () => {
             <p>{user.email}</p> */}
             {subpage === 'profile' && (
                 <div className="text-center max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
-                    <img
-                        src={user.foto}
-                        alt="Foto de perfil"
-                        className="w-32 h-32 mx-auto rounded-full object-cover shadow-md"
-                    />
+                    {/* Iniciales en lugar de la foto de perfil */}
+                    <div className="w-32 h-32 mx-auto rounded-full bg-primary text-white flex items-center justify-center text-4xl font-bold">
+                        {getInitials()}
+                    </div>
                     <h2 className="text-2xl font-semibold mt-4">{user.nombre} {user.apellido}</h2>
                     <p className="text-gray-600">{user.email}</p>
                     <div className="flex flex-col items-center mt-4 space-y-2">
