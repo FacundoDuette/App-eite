@@ -17,7 +17,9 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
             <div className="p-4">
                 {/* Dirección y capacidad */}
                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-800 truncate">{direccion}</span>
+                    <span className="text-sm font-semibold text-gray-800 truncate">
+                        {direccion}
+                    </span>
                     <span className="text-xs text-gray-500">Cap: {cantidadHuespedes}</span>
                 </div>
 
@@ -47,7 +49,7 @@ const CardAlojamiento = ({ _id, usuarioId, fotos, direccion, descripcion, cantid
                     ) : (
                         <button
                             onClick={() => navegar(`account/bookings/new/${_id}`)}
-                            className="text-blue-500 text-sm hover:underline"
+                            className="text-blue-500 text-sm hover:underline bg-transparent"
                         >
                             Ver detalles
                         </button>
