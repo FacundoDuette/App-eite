@@ -10,13 +10,14 @@ const PlacesPage = () => {
     const { action } = useParams();
     const [userAlojamientos, setUserAlojamientos] = useState([]);
     const [cargado, setCargado] = useState(false);
+    const [error, setError] = useState([]);
 
     const cargarAlojamientosUser = async () => {
         try {
             const response = await axios.get(`/api/alojamiento/user/${user._id}`);
             setUserAlojamientos(response.data);
         } catch (error) {
-            console.log(error);
+            setError(error.response.data.message);
         }
     };
 
@@ -43,8 +44,8 @@ const PlacesPage = () => {
 
                     {/* Carrusel horizontal */}
                     <div className="flex flex-wrap pb-4 gap-3 mt-4 justify-center">
-                        {userAlojamientos.length === 0 ? (
-                            <h4 className="text-gray-700">No se encontraron alojamientos para este usuario</h4>
+                        {userAlojamientos?.length === 0 ? (
+                            <h4 className="text-gray-700">{error}</h4>
                         ) : (
                             userAlojamientos.map((alojamiento, index) => (
                                 <div key={index} className="snap-start" onClick={() => setCargado(false)} >

@@ -11,13 +11,14 @@ const ReservationsPage = () => {
     const { action } = useParams();
     const [reservas, setReservas] = useState([]);
     const [cargado, setCargado] = useState(false);
+    const [error, setError] = useState("");
 
     const cargarReservas = async () => {
         try {
             const response = await axios.get(`/api/reserva/user/${user._id}`);
             setReservas(response.data.listaReservas);
         } catch (error) {
-            console.log(error);
+            setError(error.response.data.error.errors)
         }
     };
 
@@ -55,37 +56,41 @@ const ReservationsPage = () => {
             )}
             {((action !== 'new' && action !== 'edit') && (reservas.length !== 0)) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {reservas.map((reserva, index) => {
-                        const totalEstadia = calcularTotalEstadia(reserva.fechaInicio, reserva.fechaFin, reserva.precio);
-                        return (
-                            <div key={index} className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
-                                <div>
-                                    <h3 className="text-2xl font-semibold mb-1">{reserva.alojamiento.titulo}</h3> {/* Título del alojamiento */}
-                                    <p className="text-gray-500 mb-4">{reserva.alojamiento.direccion}</p> {/* Dirección del alojamiento */}
-                                    <h4 className="text-lg font-semibold mb-2">
-                                        {dayjs(reserva.fechaInicio).format('DD/MM/YYYY')} - {dayjs(reserva.fechaFin).format('DD/MM/YYYY')}
-                                    </h4>
-                                    <p className="text-gray-700 mb-4">
-                                        Huéspedes: {reserva.cantidadHuespedes} de {reserva.alojamiento.cantidadHuespedes}
-                                    </p>
-                                    <p className="text-gray-700 mb-4">
-                                        Precio por noche: ${reserva.precio}
-                                    </p>
-                                    <p className="text-gray-700 mb-4">
-                                        Total de la estadía: <span className="font-semibold">${totalEstadia}</span>
-                                    </p>
+                    {reservas?.length === 0 ? (
+                        <h4 className="text-gray-700">{error}</h4>
+                    ) :
+                        reservas.map((reserva, index) => {
+                            const totalEstadia = calcularTotalEstadia(reserva.fechaInicio, reserva.fechaFin, reserva.precio);
+                            return (
+                                <div key={index} className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-2xl font-semibold mb-1">{reserva.alojamiento.titulo}</h3> {/* Título del alojamiento */}
+                                        <p className="text-gray-500 mb-4">{reserva.alojamiento.direccion}</p> {/* Dirección del alojamiento */}
+                                        <h4 className="text-lg font-semibold mb-2">
+                                            {dayjs(reserva.fechaInicio).format('DD/MM/YYYY')} - {dayjs(reserva.fechaFin).format('DD/MM/YYYY')}
+                                        </h4>
+                                        <p className="text-gray-700 mb-4">
+                                            Huéspedes: {reserva.cantidadHuespedes} de {reserva.alojamiento.cantidadHuespedes}
+                                        </p>
+                                        <p className="text-gray-700 mb-4">
+                                            Precio por noche: ${reserva.precio}
+                                        </p>
+                                        <p className="text-gray-700 mb-4">
+                                            Total de la estadía: <span className="font-semibold">${totalEstadia}</span>
+                                        </p>
+                                    </div>
+                                    <p className="text-gray-600 mt-4">{reserva.notas || "Sin notas adicionales"}</p>
+                                    {/* Botón de Editar */}
+                                    <button
+                                        className="mt-4 bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition-colors"
+                                        onClick={() => handleEditClick(reserva._id)}
+                                    >
+                                        Editar
+                                    </button>
                                 </div>
-                                <p className="text-gray-600 mt-4">{reserva.notas || "Sin notas adicionales"}</p>
-                                {/* Botón de Editar */}
-                                <button
-                                    className="mt-4 bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition-colors"
-                                    onClick={() => handleEditClick(reserva._id)}
-                                >
-                                    Editar
-                                </button>
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    }
                 </div>
             )}
             {action === 'new' && <BookingPage />}
