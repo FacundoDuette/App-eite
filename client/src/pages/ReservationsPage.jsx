@@ -27,7 +27,7 @@ const ReservationsPage = () => {
         if ((action !== 'new' && action !== 'edit' && !cargado)) {
             cargarReservas();
         }
-    }, [action, cargado]);
+    }, [action]);
 
     return (
         <div className="px-6 py-4">
@@ -45,7 +45,7 @@ const ReservationsPage = () => {
                 </div>
             )}
             {reservas.length > 0 && (action!== 'edit') && (action !== 'new') ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" onClick={() => setCargado(false)}>
                     {reservas.map((reserva) => (
                         <CardReserva
                             key={reserva._id}
