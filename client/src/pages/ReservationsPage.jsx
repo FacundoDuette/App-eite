@@ -27,7 +27,7 @@ const ReservationsPage = () => {
             cargarReservas();
             setCargado(true);
         }
-    });
+    }, [action, cargado]);
 
     const calcularTotalEstadia = (fechaInicio, fechaFin, precio) => {
         const dias = dayjs(fechaFin).diff(dayjs(fechaInicio), "day");
