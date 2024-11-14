@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom"; // Importa useNavigate
+import { Link, useNavigate, useParams } from "react-router-dom"; 
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -7,7 +7,7 @@ import BookingPage from "../components/BookingPage";
 
 const ReservationsPage = () => {
     const { user } = useContext(userContext.userContext);
-    const navegar = useNavigate(); // Inicializa el hook de navegación
+    const navegar = useNavigate(); 
     const { action } = useParams();
     const [reservas, setReservas] = useState([]);
     const [cargado, setCargado] = useState(false);
@@ -26,7 +26,7 @@ const ReservationsPage = () => {
             cargarReservas();
             setCargado(true);
         }
-    });
+    }, [action, cargado]);
 
     const calcularTotalEstadia = (fechaInicio, fechaFin, precio) => {
         const dias = dayjs(fechaFin).diff(dayjs(fechaInicio), "day");
@@ -60,13 +60,17 @@ const ReservationsPage = () => {
                         return (
                             <div key={index} className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
                                 <div>
-                                    <h3 className="text-2xl font-semibold mb-1">{reserva.alojamiento.titulo}</h3> {/* Título del alojamiento */}
-                                    <p className="text-gray-500 mb-4">{reserva.alojamiento.direccion}</p> {/* Dirección del alojamiento */}
+                                <h3 className="text-2xl font-semibold mb-1">
+                                        {reserva.alojamiento ? reserva.alojamiento.titulo : "Alojamiento no disponible"}
+                                    </h3>
+                                    <p className="text-gray-500 mb-4">
+                                        {reserva.alojamiento ? reserva.alojamiento.direccion : "Dirección no disponible"}
+                                    </p>
                                     <h4 className="text-lg font-semibold mb-2">
                                         {dayjs(reserva.fechaInicio).format('DD/MM/YYYY')} - {dayjs(reserva.fechaFin).format('DD/MM/YYYY')}
                                     </h4>
                                     <p className="text-gray-700 mb-4">
-                                        Huéspedes: {reserva.cantidadHuespedes} de {reserva.alojamiento.cantidadHuespedes}
+                                        Huéspedes: {reserva.cantidadHuespedes} de {reserva.alojamiento ? reserva.alojamiento.cantidadHuespedes : "N/A"}
                                     </p>
                                     <p className="text-gray-700 mb-4">
                                         Precio por noche: ${reserva.precio}
